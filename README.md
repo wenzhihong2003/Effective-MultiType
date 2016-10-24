@@ -136,6 +136,8 @@ public class MainActivity extends AppCompatActivity {
 
 大功告成！这就是 **MultiType** 的基础用法了，简单、符合直觉。其中 `onCreateViewHolder` 和 `onBindViewHolder` 方法名沿袭了使用 `RecyclerView` 的习惯，令人一目了然，减少了新人的学习成本。
 
+
+
 ## 高级用法
 
 ### 使用 MultiTypeTemplates 插件自动生成代码
@@ -374,7 +376,7 @@ public class MessageAdapter extends MultiTypeAdapter {
 
 ## 设计思想
 
-**MultiType** 设计伊初，我就给它定了几个坚决不能动摇的原则：
+**MultiType** 设计伊初，我就给它定了几个原则：
 
 - 要简单，便于他人阅读代码。
 
