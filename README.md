@@ -420,7 +420,7 @@ public class MessageAdapter extends MultiTypeAdapter {
 
 ## 设计思想
 
-**MultiType** 设计伊初，我就给它定了几个原则：
+**MultiType** 设计伊始，我给它定了几个原则：
 
 - 要简单，便于他人阅读代码。
 
