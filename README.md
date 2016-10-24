@@ -168,7 +168,7 @@ public class MainActivity extends AppCompatActivity {
 
 之后回到你的 `Activity`，调用 `adapter.applyGlobalMultiTypePool()` 方法应用你注册过的全局类型。
 
-`GlobalMultiTypePool` 让一些普适性的类型能够全局共用，但使用全局类型池不当也会带来问题，这也是没有全然采用全局类型池但原因。问题在于全局类型池是静态的，如果你在 `Activity` 中注册全局类型，并传入带 `Activity` 引用的变量进去，就可能造成内存泄露。举个例子，如下是一个很常见的场景，我们把一个点击回调传递给 `provider`，并注册进了全局类型池：
+`GlobalMultiTypePool` 让一些普适性的类型能够全局共用，但使用全局类型池不当也会带来问题，这也是没有全然采用全局类型池的原因。问题在于全局类型池是静态的，如果你在 `Activity` 中注册全局类型，并传入带 `Activity` 引用的变量进去，就可能造成内存泄露。举个例子，如下是一个很常见的场景，我们把一个点击回调传递给 `provider`，并注册进了全局类型池：
 
 ```java
 public class LeakActivity extends Activity {
