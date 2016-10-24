@@ -438,3 +438,4 @@ public class MessageAdapter extends MultiTypeAdapter {
 
 - 《Android 内存泄漏案例和解析》https://drakeet.me/android-leaks
 - 《Android 复杂的多类型列表视图新写法：MultiType》https://drakeet.me/multitype
+- **MultiType** 源代码 https://github.com/drakeet/MultiType
