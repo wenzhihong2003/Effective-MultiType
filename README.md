@@ -16,7 +16,7 @@
   - [使用 全局类型池](#使用-全局类型池)
   - [一个类型对应多个 ViewProvider](#一个类型对应多个-viewprovider)
   - [与 provider 通讯](#与-provider-通讯)
-  - [使用断言，比传统 Adapter 更加易于调试](#使用断言比传统 Adapter 更加易于调试)
+  - [使用断言，比传统 Adapter 更加易于调试](#使用断言比传统-adapter-更加易于调试)
   - [支持 Google AutoValue](#支持-google-autovalue)
   - [对 class 进行二级分发](#对-class-进行二级分发)
   - [MultiType 与下拉刷新、加载更多、HeaderView、FooterView、Diff](#multitype-与下拉刷新加载更多headerviewfooterviewdiff)
@@ -302,6 +302,8 @@ public class SimpleActivity extends MenuBaseActivity {
     }
 }
 ```
+
+这样做以后，`MultiTypeAdapter` 相关的异常都会报到你的 `Activity`，并且会注明详细出错的原因，关于这个类的源代码也是很简单，有兴趣可以直接看看源码：[drakeet/multitype/MultiTypeAsserts.java](https://github.com/drakeet/MultiType/blob/master/library/src/main/java/me/drakeet/multitype/MultiTypeAsserts.java)
 
 ----
 
