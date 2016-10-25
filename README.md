@@ -64,7 +64,7 @@ dependencies {
 }
 ```
 
-注：**MultiType** 内部引用了 `support-annotations:24.2.1` 和 `recyclerview-v7:24.2.1`，如果你不想使用者两个版本，可以使用 `exclude` 将它们排除掉，然后自行引入你选择的版本，示例如下：
+注：**MultiType** 内部引用了 `support-annotations:24.2.1` 和 `recyclerview-v7:24.2.1`，如果你不想使用者两个版本，可以使用 `exclude` 将它们排除掉，然后自行引入你选择的版本，其中 `support-annotations` 属于注解库，可不引入。示例如下：
 
 
 ```groovy
