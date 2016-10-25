@@ -408,7 +408,7 @@ public class MessageAdapter extends MultiTypeAdapter {
 
   TimeMachine 使用了 **MultiType** 来创建一个复杂的聊天页面，页面和需求虽然复杂，但使用 **MultiType** 却轻松简单。
 
-  <img src="https://github.com/drakeet/TimeMachine/raw/master/art/ts2.jpg" width="270" height="486"/>
+  <img src="https://github.com/drakeet/TimeMachine/raw/master/art/ts2.jpg" width="270" height="486"/> <img src="http://ww3.sinaimg.cn/large/86e2ff85gw1f94i6ysea2j20k00zkmzn.jpg" width="270" height="486"/>
 
 - [类似 Bilibili iOS 端首页](https://github.com/drakeet/MultiType/tree/master/sample/src/main/java/me/drakeet/multitype/sample/bilibili)
 
