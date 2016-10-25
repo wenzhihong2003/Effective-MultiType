@@ -389,7 +389,65 @@ public class MessageAdapter extends MultiTypeAdapter {
 - **HeaderView、FooterView**
 
   **MultiType** 其实本身就支持 `HeaderView`、`FooterView`，只要创建一个 `Header.class` - `HeaderViewProvider` 和 `Footer.class` - `FooterViewProvider` 即可，然后把 `new Header()` 添加到 `items` 第一个位置，把 `new Footer()` 添加到 `items` 最后一个位置。需要注意的是，如果使用了 Footer View，在底部插入数据的时候，需要添加到 `最后位置 - 1`，即倒二个位置，或者把 `Footer` remove 掉，再添加数据，最后再插入一个新的 `Footer`.
+  
+## 实现 RecyclerView 嵌套横向 RecyclerView
 
+**MultiType** 天生就是来实现类似 iOS App Store 或 Google Play 那样复杂的首页列表，这种页面通常会在垂直列表中嵌套横向列表，其实横向列表我们完全可以把它视为一种 `Item` 类型，这个 item 持有一个列表数据和当前列表滑动到的位置，类似这样：
+
+```java
+public class PostList implements Item {
+
+    public final List<Post> posts;
+    public int currentPosition;
+
+    public PostList(@NonNull List<Post> posts) {this.posts = posts;}
+}
+```
+
+对应的 `HorizontalItemViewProvider` 类似这样：
+
+```java
+public class HorizontalItemViewProvider
+    extends ItemViewProvider<PostList, HorizontalItemViewProvider.ViewHolder> {
+
+    @NonNull @Override
+    protected ViewHolder onCreateViewHolder(
+        @NonNull LayoutInflater inflater, @NonNull ViewGroup parent) {
+        /* item_horizontal_list 就是一个只有 RecyclerView 的布局*/
+        View view = inflater.inflate(R.layout.item_horizontal_list, parent, false);
+        return new ViewHolder(view);
+    }
+
+    @Override
+    protected void onBindViewHolder(@NonNull ViewHolder holder, @NonNull PostList postList) {
+        holder.setPosts(postList.posts);
+    }
+
+    static class ViewHolder extends RecyclerView.ViewHolder {
+
+        private RecyclerView recyclerView;
+        private PostsAdapter adapter;
+
+        private ViewHolder(@NonNull View itemView) {
+            super(itemView);
+            recyclerView = (RecyclerView) itemView.findViewById(R.id.post_list);
+            LinearLayoutManager layoutManager = new LinearLayoutManager(itemView.getContext());
+            layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+            recyclerView.setLayoutManager(layoutManager);
+            /* adapter 只负责灌输、适配数据，布局交给 LayoutManager，可复用*/
+            adapter = new PostsAdapter();
+            recyclerView.setAdapter(adapter);
+            /* 在此设置横向滑动监听器，用于记录和恢复当前滑动到的位置，略 */
+            ...
+        }
+
+        private void setPosts(List<Post> posts) {
+            adapter.setPosts(posts);
+            adapter.notifyDataSetChanged();
+        }
+    }
+}
+```
 
 # 更多示例
 
