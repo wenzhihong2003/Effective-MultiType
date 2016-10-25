@@ -26,6 +26,8 @@
   - drakeet/TimeMachine
   - 类似 Bilibili iOS 端首页
 - [设计思想](#设计思想)
+- Q & A
+- 感谢
 - [引用文献](#引用文献)
 
 ## MultiType 的特性
@@ -100,7 +102,7 @@ public class CategoryViewProvider
 }
 ```
 
-**Step 3**. 好了，你不必再创建新的类文件了，在 `Activity` 中加入 `RecyclerView` 和 `List` 并注册你都类型即可，示例：
+**Step 3**. 好了，你不必再创建新的类文件了，在 `Activity` 中加入 `RecyclerView` 和 `List` 并注册你的类型即可，示例：
 
 ```java
 public class MainActivity extends AppCompatActivity {
