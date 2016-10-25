@@ -531,7 +531,7 @@ public class Comment implements Item {
 ]
 ```
 
-那么你的 JSON 转成 Java Bean 之后，你拿到手应该是个 `Post` 对象，现在我们写一个扁平化处理的方法：
+那么你的 JSON 转成 Java Bean 之后，你拿到手应该是个 `List<Post> posts` 对象，现在我们写一个扁平化处理的方法：
 
 ```java
 private List<Item> flattenData(List<Post> posts) {
@@ -540,8 +540,8 @@ private List<Item> flattenData(List<Post> posts) {
         /* 将 post 加进 items，Provider 内部拿到它的时候，
          * 我们无视它的 comments 内容即可 */
         items.add(post);
-        /* 紧接着将 comments 插入进 items，
-         * 评论就能正好处于 post 下面 */
+        /* 紧接着将 comments 拿出来插入进 items，
+         * 评论就能正好处于该条 post 下面 */
         items.addAll(post.comments);
     }
     return items;
@@ -551,7 +551,7 @@ private List<Item> flattenData(List<Post> posts) {
 最后我们的所有 posts 再加入全局 MultiType Items 之前，都需要经过扁平化处理：
 
 ```java
-items.add(flattenData(posts));
+items.addAll(flattenData(posts));
 adapter.notifyDataSetChanged();
 ```
 
