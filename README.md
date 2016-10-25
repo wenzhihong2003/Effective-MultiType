@@ -153,11 +153,11 @@ public class MainActivity extends AppCompatActivity {
 
 话说回来，安装和使用 **MultiTypeTemplates** 非常简单：
 
-**Step 1** 打开 Android Studio 的`设置` -> `Plugin` -> `Browse repositories`，搜索 `MultiTypeTemplates` 即可获得下载安装：
+**Step 1.** 打开 Android Studio 的`设置` -> `Plugin` -> `Browse repositories`，搜索 `MultiTypeTemplates` 即可获得下载安装：
 
 ![](http://ww4.sinaimg.cn/large/86e2ff85gw1f935l0kwilj21kw0t3akm.jpg)
 
-**Step 2** 右键点击你的 package，选择 `New` -> `MultiType Item`，然后输入你的 `Item` 名字，它就会自动生成 `Item` and `ItemViewProvider` 文件和代码。
+**Step 2.** 右键点击你的 package，选择 `New` -> `MultiType Item`，然后输入你的 `Item` 名字，它就会自动生成 `Item` and `ItemViewProvider` 文件和代码。
 
 比如你输入的是 "Category"，它就会自动生成 `Category.java` 和 `CategoryViewProvider.java`.
 
