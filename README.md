@@ -20,7 +20,7 @@
   - [支持 Google AutoValue](#支持-google-autovalue)
   - [对 class 进行二级分发](#对-class-进行二级分发)
   - [MultiType 与下拉刷新、加载更多、HeaderView、FooterView、Diff](#multitype-与下拉刷新加载更多headerviewfooterviewdiff)
-  - 实现 RecyclerView 嵌套横向 RecyclerView
+  - [实现 RecyclerView 嵌套横向 RecyclerView](#实现-recyclerview-嵌套横向-recyclerview)
   - 实现线性布局和网格布局混排列表
   - 数据扁平化处理
 - [更多示例](#更多示例)
