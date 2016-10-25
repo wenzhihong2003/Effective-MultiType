@@ -21,8 +21,8 @@
   - [对 class 进行二级分发](#对-class-进行二级分发)
   - [MultiType 与下拉刷新、加载更多、HeaderView、FooterView、Diff](#multitype-与下拉刷新加载更多headerviewfooterviewdiff)
   - [实现 RecyclerView 嵌套横向 RecyclerView](#实现-recyclerview-嵌套横向-recyclerview)
-  - 实现线性布局和网格布局混排列表
-  - 数据扁平化处理
+  - [实现线性布局和网格布局混排列表](#实现线性布局和网格布局混排列表)
+  - [数据扁平化处理](#数据扁平化处理)
 - [更多示例](#更多示例)
   - drakeet/about-page
   - 线性和网格布局混排
@@ -392,7 +392,7 @@ public class MessageAdapter extends MultiTypeAdapter {
   
 ## 实现 RecyclerView 嵌套横向 RecyclerView
 
-**MultiType** 天生就是来实现类似 iOS App Store 或 Google Play 那样复杂的首页列表，这种页面通常会在垂直列表中嵌套横向列表，其实横向列表我们完全可以把它视为一种 `Item` 类型，这个 item 持有一个列表数据和当前列表滑动到的位置，类似这样：
+**MultiType** 天生就适合实现类似 iOS App Store 或 Google Play 那样复杂的首页列表，这种页面通常会在垂直列表中嵌套横向列表，其实横向列表我们完全可以把它视为一种 `Item` 类型，这个 item 持有一个列表数据和当前列表滑动到的位置，类似这样：
 
 ```java
 public class PostList implements Item {
@@ -445,6 +445,51 @@ public class HorizontalItemViewProvider
             adapter.setPosts(posts);
             adapter.notifyDataSetChanged();
         }
+    }
+}
+```
+
+## 实现线性布局和网格布局混排列表
+
+这个课题其实不属于 **MultiType** 的范畴，**MultiType** 的职责是做数据类型分发，而不是布局，但鉴于很多复杂页面都会需要线性布局和网格布局混排，我就简单讲一讲，关键在于 `RecyclerView` 的 `LayoutManager`，虽然是线性和网格混合，但实现起来其实只要一个网格布局 `GridLayoutManager`，如果你查看 `GridLayoutManager` 的官方源码，你会发现它其实继承自 `LinearLayoutManager`. 谷歌封装得很好，以下是示例和解释：
+
+```java
+public class MultiGridActivity extends MenuBaseActivity {
+
+    private final static int SPAN_COUNT = 5;
+    private MultiTypeAdapter adapter;
+    private Items items;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_multi_grid);
+        items = new Items();
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.list);
+        
+        final GridLayoutManager layoutManager = new GridLayoutManager(this, SPAN_COUNT);
+        
+        /* 关键内容：通过 setSpanSizeLookup 来告诉布局，你的 item 占几个横向单位，
+           如果你横向有 5 个单位，而你的 item 占用 5 个单位，那么它就会看起来单独占用一行 */
+        layoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+            @Override
+            public int getSpanSize(int position) {
+                return (items.get(position) instanceof Category) ? SPAN_COUNT : 1;
+            }
+        });
+        recyclerView.setLayoutManager(layoutManager);
+        
+        adapter = new MultiTypeAdapter(items);
+        adapter.applyGlobalMultiTypePool();
+        adapter.register(Square.class, new SquareViewProvider());
+
+        assertAllRegistered(adapter, items);
+        recyclerView.setAdapter(adapter);
+        loadData();
+    }
+
+    private void loadData() {
+        // ...
     }
 }
 ```
