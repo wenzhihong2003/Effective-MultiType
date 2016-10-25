@@ -412,7 +412,7 @@ public class MessageAdapter extends MultiTypeAdapter {
 
 - [类似 Bilibili iOS 端首页](https://github.com/drakeet/MultiType/tree/master/sample/src/main/java/me/drakeet/multitype/sample/bilibili)
 
-  使用 `MultiType` 轻轻松松实现类似 Bilibili iOS 端首页复杂的多类型列表视图，却能保持很好的复用性能和清晰的代码。
+  使用 `MultiType` 轻轻松松实现类似 Bilibili iOS 端首页复杂的多类型列表视图，包括嵌套横向 RecyclerView Item.
 
   <img src="https://github.com/drakeet/MultiType/raw/master/art/screenshot-bilibili.png" width="270" height="486"/>
 
