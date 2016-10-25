@@ -413,7 +413,7 @@ public class HorizontalItemViewProvider
     @NonNull @Override
     protected ViewHolder onCreateViewHolder(
         @NonNull LayoutInflater inflater, @NonNull ViewGroup parent) {
-        /* item_horizontal_list 就是一个只有 RecyclerView 的布局*/
+        /* item_horizontal_list 就是一个只有 RecyclerView 的布局 */
         View view = inflater.inflate(R.layout.item_horizontal_list, parent, false);
         return new ViewHolder(view);
     }
@@ -434,7 +434,7 @@ public class HorizontalItemViewProvider
             LinearLayoutManager layoutManager = new LinearLayoutManager(itemView.getContext());
             layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
             recyclerView.setLayoutManager(layoutManager);
-            /* adapter 只负责灌输、适配数据，布局交给 LayoutManager，可复用*/
+            /* adapter 只负责灌输、适配数据，布局交给 LayoutManager，可复用 */
             adapter = new PostsAdapter();
             recyclerView.setAdapter(adapter);
             /* 在此设置横向滑动监听器，用于记录和恢复当前滑动到的位置，略 */
