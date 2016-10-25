@@ -41,7 +41,7 @@
 
 - 周到，支持 局部类型池 和 全局类型池，并支持二者共用，当出现冲突时，以局部的为准
 - 灵活，几乎所有的部件(类)都可被替换、可继承定制，留够了丰富的可覆写的接口
-- 轻盈，整个类库只有 11 个类文件，`aar` 或 `jar` 包大小只有 10KB
+- 轻盈，整个类库只有 10 个类文件，`aar` 或 `jar` 包大小只有 10KB
 - 纯粹，只负责本分事情，专注多类型的列表试图类型分发
 - 高效，没有性能损失，内存友好，最大限度发挥 `RecyclerView` 的复用性
 - 可读，代码清晰干净、设计精巧，极力避免复杂化，可读性很好，为拓展和自行解决问题提供了基础
@@ -58,11 +58,25 @@
 
 在你的 `build.gradle`:
 
-```java
+```groovy
 dependencies {
-    compile 'me.drakeet.multitype:multitype:2.2.0-beta1'
+    compile 'me.drakeet.multitype:multitype:2.2.0'
 }
 ```
+
+注：**MultiType** 内部引用了 `support-annotations:24.2.1` 和 `recyclerview-v7:24.2.1`，如果你不想使用者两个版本，可以使用 `exclude` 将它们排除掉，然后自行引入你选择的版本，示例如下：
+
+
+```groovy
+dependencies {
+    compile('me.drakeet.multitype:multitype:2.2.0', {
+       exclude group: 'com.android.support'
+    })
+    compile 'com.android.support:support-annotations:你选择的版本'
+    compile 'com.android.support:recyclerview-v7:你选择的版本'
+}
+```
+
 ## 使用
 
 **Step 1**. 创建一个 `class implements Item`，它将是你的数据类型或 Java bean/model，示例：
