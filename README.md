@@ -496,9 +496,9 @@ public class MultiGridActivity extends MenuBaseActivity {
 
 ## 数据扁平化处理
 
-在一个**垂直** `RecyclerView` 中，`Item` 们都是同级的，没有任何嵌套关系，但我们的数据结构往往存在嵌套关系，比如 `Post` 内部包含了 `Comments` 数据，也就是 `Post` 嵌套了 `Comment`，就像微信朋友圈一样，"动态" 伴随着 "评论"。那么如何把 非扁平化 的数据排布在 扁平化 的列表中呢，必然需要一个_数据扁平化处理_的过程，就像 `ListView` 的数据需要一个 `Adapter` 来适配，`Adapter` 就像一个油漏斗，把油引入瓶子中。我们在面对嵌套数据结构的时候，可以采用如下的扁平化处理，关于扁平化这个词，不必太纠结，简单说，就是把嵌套数据都拉出来，摊平，让 `Comment` 和 `Post` 同级，最后把它们都 add 进一个 `Items` 容器，交给 `MultiTypeAdapter`：
+在一个**垂直** `RecyclerView` 中，`Item` 们都是同级的，没有任何嵌套关系，但我们的数据结构往往存在嵌套关系，比如 `Post` 内部包含了 `Comments` 数据，也就是 `Post` 嵌套了 `Comment`，就像微信朋友圈一样，"动态" 伴随着 "评论"。那么如何把 非扁平化 的数据排布在 扁平 的列表中呢，必然需要一个_数据扁平化处理_的过程，就像 `ListView` 的数据需要一个 `Adapter` 来适配，`Adapter` 就像一个油漏斗，把油引入瓶子中。我们在面对嵌套数据结构的时候，可以采用如下的扁平化处理，关于扁平化这个词，不必太纠结，简单说，就是把嵌套数据都拉出来，摊平，让 `Comment` 和 `Post` 同级，最后把它们都 add 进一个 `Items` 容器，交给 `MultiTypeAdapter`：
 
-例如你的 `Post` 是这样的：
+例如：你的 `Post` 是这样的：
 
 ```java
 public class Post implements Item {
@@ -548,7 +548,7 @@ private List<Item> flattenData(List<Post> posts) {
 }
 ```
 
-最后我们的所有 posts 再加入全局 MultiType Items 之前，都需要经过扁平化处理：
+最后我们所有的 `posts` 在加入全局 MultiType `Items` 之前，都需要经过扁平化处理：
 
 ```java
 items.addAll(flattenData(posts));
