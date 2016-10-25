@@ -448,7 +448,7 @@ public class MessageAdapter extends MultiTypeAdapter {
   
 - **Q: 觉得 MultiType 不够精简，应该怎么做？**
 
-  A: 我在前面说了，_MultiType 或许不是使用起来最简单的，但很可能是使用起来最灵活的。_其中的缘由它高度可定制、可拓展，而不是把一些路封死。作为一个基础类库，简单和灵活需要一个均衡点，过度精简便要以失去灵活性为代价。如果觉得 MultiType 不够精简，想将它修改得更加容易使用，我推荐的方式是去继承 `MultiTypeAdapter` 或 `ItemViewProvider`，而不是到底层去直接修改、破坏它们。
+  A: 我在前面说了，_MultiType 或许不是使用起来最简单的，但很可能是使用起来最灵活的。_其中的缘由是它高度可定制、可拓展，而不是把一些路封死。作为一个基础类库，简单和灵活需要一个均衡点，过度精简便要以失去灵活性为代价。如果觉得 MultiType 不够精简，想将它修改得更加容易使用，我推荐的方式是去继承 `MultiTypeAdapter` 或 `ItemViewProvider`，而不是到底层去直接修改、破坏它们。这样的做法不管对于 MultiType 还是其它开源库，都应该是首选的。
   
 # 感谢
 
