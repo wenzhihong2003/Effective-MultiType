@@ -1,4 +1,4 @@
-## 前言
+# 前言
 
 在我开发我的 **[TimeMachine](https://github.com/drakeet/TimeMachine)** 时，我有一个聊天页面，于是我设计了我的消息类型池系统，它是完全解耦的，于是我能够轻松将它抽离出来分享，并给它取名为 **MultiType**.
 
@@ -6,7 +6,7 @@
 
 现在好了，我们有了 **MultiType**，简单来说，**MultiType** 就是一个多类型列表视图的中间层分发框架，它本是为 IM 视图开发的，IM 的消息类型是有很多不同种类的，而且新增频繁，而 **MultiType** 能够轻松胜任，并使得随时可拓展新的类型进入列表当中。它内建了 `类型` - `View` 的复用池系统，支持 `RecyclerView`、复用，代码模块化开发，清晰而灵活。
 
-## 目录
+# 目录
 
 - [MultiType 的特性](#multitype-的特性)
 - [总览](#总览)
@@ -33,7 +33,7 @@
 - [感谢](#感谢)
 - [引用文献](#引用文献)
 
-## MultiType 的特性
+# MultiType 的特性
 
 - 周到，支持 局部类型池 和 全局类型池，并支持二者共用，当出现冲突时，以局部的为准
 - 灵活，几乎所有的部件(类)都可被替换、可继承定制，留够了丰富的可覆写的接口
@@ -42,15 +42,15 @@
 - 高效，没有性能损失，内存友好，最大限度发挥 `RecyclerView` 的复用性
 - 可读，代码清晰干净、设计精巧，极力避免复杂化，可读性很好，为拓展和自行解决问题提供了基础
 
-## 总览
+# 总览
 
 ![](http://ww3.sinaimg.cn/large/86e2ff85gw1f93likz705j21kq14eqak.jpg)
 
-## MultiType 基础用法
+# MultiType 基础用法
 
 话不多说，我们先看看基础用法，使用 **MultiType** 一般情况下只要 maven 引入 + 三个步骤，之后还会介绍使用插件生成代码方式，步骤将更加简化：
 
-#### 引入
+### 引入
 
 在你的 `build.gradle`:
 
@@ -59,7 +59,7 @@ dependencies {
     compile 'me.drakeet.multitype:multitype:2.2.0-beta1'
 }
 ```
-### 使用
+## 使用
 
 **Step 1**. 创建一个 `class implements Item`，它将是你的数据类型或 Java bean/model，示例：
 
@@ -144,9 +144,9 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-## 高级用法
+# 高级用法
 
-### 使用 MultiTypeTemplates 插件自动生成代码
+## 使用 MultiTypeTemplates 插件自动生成代码
 
 上面我们介绍了通过 3 个步骤完成 **MultiType** 的初次接入使用，实际上这个过程可以更加简化，**MultiType** 提供了 Android Studio 插件来自动生成代码：**MultiTypeTemplates**，源码也是开源的，https://github.com/drakeet/MultiTypeTemplates ，不仅提供了一键生成 `Item` 和 `ItemViewProvider`，而且是一个很好的利用代码模版自动生成代码的示例，其中使用到了官方提供的代码模版 API，也用到了我自己发明的更加灵活修改模版内容的方法，有兴趣做这方面插件的可以看看。
 
@@ -162,9 +162,8 @@ public class MainActivity extends AppCompatActivity {
 
 特别方便，相信你会很喜欢它。未来这个插件也将会支持自动生成布局文件，这是目前欠缺的。但其实 AS 在这方面已经很方便了，对布局 `R.layout.item_category` 使用 `alt + enter` 即可自动生成布局文件。
 
-----
 
-### 使用 全局类型池
+## 使用 全局类型池
 
 **MultiType** 支持 局部类型池 和 全局类型池，并支持二者共用，当出现冲突时，以局部的为准。使用局部类型池就如上面的示例，调用 `adapter.register()` 即可。而使用全局类型池也是很容易的，
 **MultiType** 提供了一个内置的 `GlobalMultiTypePool` 作为全局类型池来存储类型和 view 关系，使用如下：
@@ -210,17 +209,15 @@ public class LeakActivity extends Activity {
 
 另外一个特性是，不管是全局类型池还是局部类型池，都支持重复注册类型。当发现重复时，之后注册的会把之前注册的类型覆盖掉，因此对于全局类型池，需要谨慎进行重复注册，以免影响到其他地方。
 
-----
 
-### 一个类型对应多个 `ViewProvider`
+## 一个类型对应多个 `ViewProvider`
 
 **MultiType** 支持一个类型对应多个 `ViewProvider`，但仅限于在不同的列表中。比如你在 `adapter1` 中注册了 `Post.class` 对应 `SinglePostViewProvider`，在另一个 `adapter2` 中注册了 `Post.class` 对应 `PostDetailViewProvider`，这便是一对多的场景，只要是在不同的局部类型池中，无论如何都不会相互干扰，都是允许的。
 
 而对于在 同一个列表中 一对多的问题，首先这种场景非常少见，再者不管支不支持一对多，开发者都要去判断哪个时候运用哪个 `ViewProvider`，这是逃不掉的，否则程序就无所适从了。因此，**MultiType** 不去特别解决这个问题，如果要实现同一个列表中一对多，只要空继承你的类型，然后把它视为新的类型，注册到你的类型池中即可。
 
-----
 
-### 与 `provider` 通讯
+## 与 `provider` 通讯
 
 `provider` 对象可以接受外部类型、回调函数，只要在使用之前，传递进去即可，例如：
 
@@ -271,9 +268,7 @@ public class SquareViewProvider extends ItemViewProvider<Square, SquareViewProvi
 }
 ```
 
-----
-
-### 使用断言，比传统 Adapter 更加易于调试
+## 使用断言，比传统 Adapter 更加易于调试
 
 **众所周知，如果一个传统的 `RecyclerView` `Adapter` 内部有异常导致崩溃，它的异常栈是不会指向你的 `Activity` 的**，这给我们在开发调试过程中带来了麻烦，如果我们的 `Adapter` 是复用的，我们就不知道是哪一个页面崩溃。而对于 `MultiTypeAdapter`，我们显然要用于多个地方，而且可能出现开发者忘记注册类型等等问题，为了便于调试，我提供了很方便的断言 API: `MultiTypeAsserts`，使用方式如下：
 
@@ -310,17 +305,15 @@ public class SimpleActivity extends MenuBaseActivity {
 
 这样做以后，`MultiTypeAdapter` 相关的异常都会报到你的 `Activity`，并且会注明详细出错的原因，关于这个类的源代码也是很简单，有兴趣可以直接看看源码：[drakeet/multitype/MultiTypeAsserts.java](https://github.com/drakeet/MultiType/blob/master/library/src/main/java/me/drakeet/multitype/MultiTypeAsserts.java)
 
-----
 
-### 支持 Google AutoValue
+## 支持 Google AutoValue
 
 **MultiType** 支持 Google [AutoValue](https://github.com/google/auto/tree/master/value)，同时支持映射子类到同一 view provider 了，规则是：如果子类有注册，就用注册的映射关系；如果子类没注册，则该子类对象使用注册过的父类映射关系。
 
 ![](http://ww2.sinaimg.cn/large/86e2ff85gw1f93i8wgoubj21ee0nmdnk.jpg)
 
-----
 
-### 对 class 进行二级分发
+## 对 class 进行二级分发
 
 在我的 **TimeMachine** 中，我的消息数据结构是 `Message` - `MessageContent`，简单说就是，我的 `message` 对象们都是一样的 `Message.class`，但 `message` 包含的 `content` 对象不一样，我需要根据 `content` 来分发数据到 `ItemViewProvider`，但我加入 `Items` List 中的数据是整个 `Message.class`，因此，如果什么也不做，它们会被视为同一类型。对于这种场景，我们可以继承 `MultiTypeAdapter` 并覆写 `onFlattenClass(@NonNull Item message)` 方法进行二级分发，以我的 `MessageAdapter` 为例：
 
@@ -340,9 +333,8 @@ public class MessageAdapter extends MultiTypeAdapter {
 
 是不是十分简单？这样以后，我就可以直接将我的 `MessageContent.class` 注册进类型池，而将包含了不同 content 的 `Message` 对象 add 进 `Items` List，`MessageAdapter` 会自动取出 `message` 的 `content` 对象，并以它为基准定位 `ItemViewProvider`.
 
-----
 
-### MultiType 与下拉刷新、加载更多、HeaderView、FooterView、Diff
+## MultiType 与下拉刷新、加载更多、HeaderView、FooterView、Diff
 
 **MultiType** 设计从始至终，都极力避免它往复杂化方向发展，一开始我的设计宗旨就是它应该是一个非常纯粹的、专一的项目，而非各种乱七八糟的功能都要囊括进来的多合一大型库，因此整个过程它都特别克制，期间有许多人给我发过一些无关特性的 Pull Request，大多被拒绝了。
 
@@ -395,7 +387,7 @@ public class MessageAdapter extends MultiTypeAdapter {
   **MultiType** 其实本身就支持 `HeaderView`、`FooterView`，只要创建一个 `Header.class` - `HeaderViewProvider` 和 `Footer.class` - `FooterViewProvider` 即可，然后把 `new Header()` 添加到 `items` 第一个位置，把 `new Footer()` 添加到 `items` 最后一个位置。需要注意的是，如果使用了 Footer View，在底部插入数据的时候，需要添加到 `最后位置 - 1`，即倒二个位置，或者把 `Footer` remove 掉，再添加数据，最后再插入一个新的 `Footer`.
 
 
-## 更多示例
+# 更多示例
 
 **MultiType** 的开源项目提供了许多的 sample (示例) 程序，这些示例秉承了一贯的代码清晰、干净的风格，十分易于阅读：
 
@@ -423,7 +415,7 @@ public class MessageAdapter extends MultiTypeAdapter {
 
   <img src="https://github.com/drakeet/MultiType/raw/master/art/screenshot-bilibili.png" width="270" height="486"/>
 
-## 设计思想
+# 设计思想
 
 **MultiType** 设计伊始，我给它定了几个原则：
 
@@ -439,7 +431,7 @@ public class MessageAdapter extends MultiTypeAdapter {
 
   **MultiType** 提供的 `ItemViewProvider` 沿袭了 `RecyclerView Adapter` 的接口命名，使用起来更加舒适，符合习惯和直觉。另外，`ItemViewProvider` 需要提供了 类型 泛型，虽然略微有点儿麻烦，但这样带来的好处却是很多的，指定泛型之后，我们不需要再自己做强制转型，而且代码能够显式表明 `ItemViewProvider` 和 `Item class` 的对应关系。遵循了简单可依赖的原则。另外，现在我们有 MultiTypeTemplates 插件来自动生成代码，这个过程变得更加顺滑简单。
   
-## Q & A
+# Q & A
 
 - **Q: 全局类型池的主要作用是什么，能取消全局的使用吗？**
 
@@ -453,7 +445,7 @@ public class MessageAdapter extends MultiTypeAdapter {
 
   A: MultiType 最早的版本是只支持全局类型池的，因为它带来的好处诸多，但随着更多人使用，它的问题也逐渐暴露出来。一，全局类型池的注册容易分散到许多地方，这是无法约束的，会导致代码难以追寻。二，如果使用不当，可能引起内存泄漏问题，我自己是不会写出内存泄漏的代码的，但如果你提供了可能性，就有很多人会趟上去。三，为了解决一对多的问题，我想了许多方案，很多几乎写好了，但都被推翻了，后来我发现，这些麻烦，都是因为一开始基于全局类型池引起的，那些方案固然都可以，但会使代码变得复杂，我比较不喜欢。
   
-## 感谢
+# 感谢
 
 在 **MultiType** 开发维护过程中，很多朋友给了我很多反馈，我也非常乐意于与大家交流，几乎有问必答，因为这是一个难得不错的项目，它比较接近我心中对于一个完美项目的要求：设计精巧，代码干净漂亮。
 
@@ -461,7 +453,7 @@ public class MessageAdapter extends MultiTypeAdapter {
 
 话说回来，这个项目，特别感谢大家的帮忙、反馈，感谢一些朋友的 PR 和贡献，是你们让我觉得开源是一件除了完善自我之外 还充满了意义的一件事情 -- 能够与更多人协同，能够面向更宽广的世界，谢谢大家！以下是感谢名单：
 
-## 引用文献
+# 引用文献
 
 - 《Android 内存泄漏案例和解析》https://drakeet.me/android-leaks
 - 《Android 复杂的多类型列表视图新写法：MultiType》https://drakeet.me/multitype
