@@ -494,6 +494,69 @@ public class MultiGridActivity extends MenuBaseActivity {
 }
 ```
 
+## 数据扁平化处理
+
+在一个**垂直** `RecyclerView` 中，`Item` 们都是同级的，没有任何嵌套关系，但我们的数据结构往往存在嵌套关系，比如 `Post` 内部包含了 `Comments` 数据，也就是 `Post` 嵌套了 `Comment`，就像微信朋友圈一样，"动态" 伴随着 "评论"。那么如何把 非扁平化 的数据排布在 扁平化 的列表中呢，必然需要一个_数据扁平化处理_的过程，就像 `ListView` 的数据需要一个 `Adapter` 来适配，`Adapter` 就像一个油漏斗，把油引入瓶子中。我们在面对嵌套数据结构的时候，可以采用如下的扁平化处理，关于扁平化这个词，不必太纠结，简单说，就是把嵌套数据都拉出来，摊平，让 `Comment` 和 `Post` 同级，最后把它们都 add 进一个 `Items` 容器，交给 `MultiTypeAdapter`：
+
+例如你的 `Post` 是这样的：
+
+```java
+public class Post implements Item {
+
+    public String content;
+    public List<Comment> comments; 
+}
+```
+
+你的 `Comment` 是这样的：
+
+```java
+public class Comment implements Item {
+
+    public String content;
+}
+```
+
+你服务端返回的 JSON 数据是这样的：
+
+```json
+[
+    {
+        "content":"I have released the MultiType v2.2.0", 
+        "comments":[
+            {"content":"great"},
+            {"content":"I love your post!"}
+        ]
+    }
+]
+```
+
+那么你的 JSON 转成 Java Bean 之后，你拿到手应该是个 `Post` 对象，现在我们写一个扁平化处理的方法：
+
+```java
+private List<Item> flattenData(List<Post> posts) {
+    final List<Item> items = new ArrayList<>();
+    for (Post post : posts) {
+        /* 将 post 加进 items，Provider 内部拿到它的时候，
+         * 我们无视它的 comments 内容即可 */
+        items.add(post);
+        /* 紧接着将 comments 插入进 items，
+         * 评论就能正好处于 post 下面 */
+        items.addAll(post.comments);
+    }
+    return items;
+}
+```
+
+最后我们的所有 posts 再加入全局 MultiType Items 之前，都需要经过扁平化处理：
+
+```java
+items.add(flattenData(posts));
+adapter.notifyDataSetChanged();
+```
+
+整个过程其实并不困难，相信大家都已经理解和懂得处理了。
+
 # 更多示例
 
 **MultiType** 的开源项目提供了许多的 sample (示例) 程序，这些示例秉承了一贯的代码清晰、干净的风格，十分易于阅读：
