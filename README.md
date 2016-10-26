@@ -348,14 +348,14 @@ public class MessageAdapter extends MultiTypeAdapter {
 }
 ```
 
-是不是十分简单？这样以后，我就可以直接将我的 `MessageContent.class` 注册进类型池，而将包含了不同 content 的 `Message` 对象 add 进 `Items` List，`MessageAdapter` 会自动取出 `message` 的 `content` 对象，并以它为基准定位 `ItemViewProvider`.
+是不是十分简单？这样以后，我就可以直接将 `MessageContent.class` 注册进类型池，而将包含了不同 content 的 `Message` 对象 add 进 `Items` List，`MessageAdapter` 会自动取出 `message` 的 `content` 对象，并以它为基准定位 `ItemViewProvider`.
 
 
 ## MultiType 与下拉刷新、加载更多、HeaderView、FooterView、Diff
 
-**MultiType** 设计从始至终，都极力避免它往复杂化方向发展，一开始我的设计宗旨就是它应该是一个非常纯粹的、专一的项目，而非各种乱七八糟的功能都要囊括进来的多合一大型库，因此整个过程它都特别克制，期间有许多人给我发过一些无关特性的 Pull Request，大多被拒绝了。
+**MultiType** 设计从始至终，都极力避免它往复杂化方向发展，一开始我的设计宗旨就是它应该是一个非常纯粹的、专一的项目，而非各种乱七八糟的功能都要囊括进来的多合一大型库，因此它很克制，期间有许多人给我发过一些无关特性的 Pull Request，表示感谢，但大多被拒绝了。
 
-对于很多人关心的 下拉刷新、加载更多、HeaderView、FooterView、Diff 这些功能特性，其实都不应该是 **MultiType** 的范畴，**MultiType** 的分内之事是做类型、事件与 View 的分发、连接工作，其余所有的这些需求，都是可以在 **MultiType** 外面完成，或者通过继承进行自行封装和拓展，而作为一个基础、公共类库，我想它是不应该包含这些内容。
+对于很多人关心的 下拉刷新、加载更多、HeaderView、FooterView、Diff 这些功能特性，其实都不应该是 **MultiType** 的范畴，**MultiType** 的分内之事是做类型、事件与 View 的分发、连接工作，其余无关的需求，都是可以在 **MultiType** 外面完成，或者通过继承进行自行封装和拓展，而作为一个基础、公共类库，我想它是不应该包含这些内容。
 
 但很多新手可能并不习惯一码归一码，不习惯代码模块化，因此在此我有必要对这几个点简单示范下如何在 **MultiType** 之外去实现：
 
@@ -405,7 +405,7 @@ public class MessageAdapter extends MultiTypeAdapter {
   
 ## 实现 RecyclerView 嵌套横向 RecyclerView
 
-**MultiType** 天生就适合实现类似 iOS App Store 或 Google Play 那样复杂的首页列表，这种页面通常会在垂直列表中嵌套横向列表，其实横向列表我们完全可以把它视为一种 `Item` 类型，这个 item 持有一个列表数据和当前列表滑动到的位置，类似这样：
+**MultiType** 天生就适合实现类似 iOS App Store 或 Google Play 那样复杂的首页列表，这种页面通常会在垂直列表中嵌套横向列表，其实横向列表我们完全可以把它视为一种 `Item` 类型，这个 item 持有一个列表数据和当前横向列表滑动到的位置，类似这样：
 
 ```java
 public class PostList implements Item {
@@ -464,7 +464,7 @@ public class HorizontalItemViewProvider
 
 ## 实现线性布局和网格布局混排列表
 
-这个课题其实不属于 **MultiType** 的范畴，**MultiType** 的职责是做数据类型分发，而不是布局，但鉴于很多复杂页面都会需要线性布局和网格布局混排，我就简单讲一讲，关键在于 `RecyclerView` 的 `LayoutManager`，虽然是线性和网格混合，但实现起来其实只要一个网格布局 `GridLayoutManager`，如果你查看 `GridLayoutManager` 的官方源码，你会发现它其实继承自 `LinearLayoutManager`. 谷歌封装得很好，以下是示例和解释：
+这个课题其实不属于 **MultiType** 的范畴，**MultiType** 的职责是做数据类型分发，而不是布局，但鉴于很多复杂页面都会需要线性布局和网格布局混排，我就简单讲一讲，关键在于 `RecyclerView` 的 `LayoutManager`，虽然是线性和网格混合，但实现起来其实只要一个网格布局 `GridLayoutManager`，如果你查看 `GridLayoutManager` 的官方源码，你会发现它其实继承自 `LinearLayoutManager`. 以下是示例和解释：
 
 ```java
 public class MultiGridActivity extends MenuBaseActivity {
@@ -509,7 +509,7 @@ public class MultiGridActivity extends MenuBaseActivity {
 
 ## 数据扁平化处理
 
-在一个**垂直** `RecyclerView` 中，`Item` 们都是同级的，没有任何嵌套关系，但我们的数据结构往往存在嵌套关系，比如 `Post` 内部包含了 `Comments` 数据，也就是 `Post` 嵌套了 `Comment`，就像微信朋友圈一样，"动态" 伴随着 "评论"。那么如何把 非扁平化 的数据排布在 扁平 的列表中呢，必然需要一个_数据扁平化处理_的过程，就像 `ListView` 的数据需要一个 `Adapter` 来适配，`Adapter` 就像一个油漏斗，把油引入瓶子中。我们在面对嵌套数据结构的时候，可以采用如下的扁平化处理，关于扁平化这个词，不必太纠结，简单说，就是把嵌套数据都拉出来，摊平，让 `Comment` 和 `Post` 同级，最后把它们都 add 进一个 `Items` 容器，交给 `MultiTypeAdapter`：
+在一个**垂直** `RecyclerView` 中，`Item` 们都是同级的，没有任何嵌套关系，但我们的数据结构往往存在嵌套关系，比如 `Post` 内部包含了 `Comment`s 数据，也就是 `Post` 嵌套了 `Comment`，就像微信朋友圈一样，"动态" 伴随着 "评论"。那么如何把 非扁平化 的数据排布在 扁平 的列表中呢？必然需要一个_数据扁平化处理_的过程，就像 `ListView` 的数据需要一个 `Adapter` 来适配，`Adapter` 就像一个油漏斗，把油引入瓶子中。我们在面对嵌套数据结构的时候，可以采用如下的扁平化处理，关于扁平化这个词，不必太纠结，简单说，就是把嵌套数据都拉出来，摊平，让 `Comment` 和 `Post` 同级，最后把它们都 add 进一个 `Items` 容器，交给 `MultiTypeAdapter`：
 
 例如：你的 `Post` 是这样的：
 
@@ -576,13 +576,13 @@ adapter.notifyDataSetChanged();
 
 - [drakeet/about-page](https://github.com/drakeet/about-page)
 
-  一个 material design 的关于页面，包含了多种 Item，并且非常易于使用。
+  一个 material design 的关于页面，核心基于 MultiType，包含了多种 Item，美观，容易使用。
 
   ![](http://ww2.sinaimg.cn/large/86e2ff85gw1f93gq2tevbj21700pcjyp.jpg)
 
 - [线性和网格布局混排](https://github.com/drakeet/MultiType/tree/master/sample/src/main/java/me/drakeet/multitype/sample/grid)
 
-  使用 `MultiType` 和 `GridLayoutManager` 实现网格和线性混合布局，简单、直观。
+  使用 `MultiType` 和 `GridLayoutManager` 实现网格和线性混合布局，实现一个选集页面。
 
   <img src="https://github.com/drakeet/MultiType/raw/master/art/screenshot-multigrid.png" width=270 height=486/>
 
@@ -594,7 +594,7 @@ adapter.notifyDataSetChanged();
 
 - [类似 Bilibili iOS 端首页](https://github.com/drakeet/MultiType/tree/master/sample/src/main/java/me/drakeet/multitype/sample/bilibili)
 
-  使用 `MultiType` 轻轻松松实现类似 Bilibili iOS 端首页复杂的多类型列表视图，包括嵌套横向 `RecyclerView` Item.
+  使用 `MultiType` 轻松实现类似 Bilibili iOS 端首页复杂的多类型列表视图，包括嵌套横向 `RecyclerView` Item.
 
   <img src="https://github.com/drakeet/MultiType/raw/master/art/screenshot-bilibili.png" width="270" height="486"/>
 
@@ -604,11 +604,11 @@ adapter.notifyDataSetChanged();
 
 - 要简单，便于他人阅读代码。
 
-  因此我极力去避免将它复杂化，比如引入 item id 机制，比如加入许多不相干的内容，比如使用 apt + 注解完成类型和 View 自动绑定、自动注册，再比如，使用反射。这些我都是拒绝的。我想写人人可读的代码，使用简单的方式，去实现复杂的需求。过多不相干、没必要的代码，将会使项目变得令人晕头转向，难以阅读，遇到需要定制、解决问题的时候，无从下手。
+  因此我极力去避免将它复杂化，比如引入显性 item id 机制（MultiType 内部有隐性 id），比如加入许多不相干的内容，比如使用 apt + 注解完成类型和 View 自动绑定、自动注册，再比如，使用反射。这些我都是拒绝的。我想写人人可读的代码，使用简单的方式，去实现复杂的需求。过多不相干、没必要的代码，将会使项目变得令人晕头转向，难以阅读，遇到需要定制、解决问题的时候，无从下手。
 
 - 要灵活，便于拓展和适应各种需求
 
-  很多人会得意地告诉我，他们把 **MultiType** 源码精简成三个类，甚至一个类，以为代码越少就是越好，这我也是不能赞同的，**MultiType** 考虑得比他们更远，这是一个提供给大众使用的类库，过度的精简只会使得灵活性大幅失去。**它或许不是使用起来最简单的，但很可能是使用起来最灵活的。** 在我看来，灵活性的优先级大于简单性。因此，**MultiType** 各个组件都是以接口进行连接，这意味着它所有的角色、组件都可以被替换，或者被拓展和继承。如果你觉得它使用起来还不够简单，完全可以通过继承来封装出更具体符合你使用需求的方法，它已经暴露了足够丰富、周到的接口以供继承。我们不应该直接去修改源码，这会导致一旦你后续发现你的精简版满足不了你的需求时候，已经没有回头路了。
+  很多人会得意地告诉我，他们把 **MultiType** 源码精简成三个类，甚至一个类，以为代码越少就是越好，这我也是不能赞同的，**MultiType** 考虑得比他们更远，这是一个提供给大众使用的类库，过度的精简只会使得灵活性大幅失去。**它或许不是使用起来最简单的，但很可能是使用起来最灵活的。** 在我看来，灵活性的优先级大于简单性。因此，**MultiType** 各个组件都是以接口进行连接，这意味着它所有的角色、组件都可以被替换，或者被拓展和继承。如果你觉得它使用起来还不够简单，完全可以通过继承来封装出更具体符合你使用需求的方法。它已经暴露了足够丰富、周到的接口以供继承。我们不应该直接去修改源码，这会导致一旦后续发现你的精简版满足不了你的需求时，已经没有回头路了。
 
 - 要直观，使用起来能令项目代码更清晰、模块化
 
