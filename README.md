@@ -61,7 +61,7 @@
 
 ```groovy
 dependencies {
-    compile 'me.drakeet.multitype:multitype:2.2.0'
+    compile 'me.drakeet.multitype:multitype:2.2.1'
 }
 ```
 
@@ -70,7 +70,7 @@ dependencies {
 
 ```groovy
 dependencies {
-    compile('me.drakeet.multitype:multitype:2.2.0', {
+    compile('me.drakeet.multitype:multitype:2.2.1', {
        exclude group: 'com.android.support'
     })
     compile 'com.android.support:recyclerview-v7:你选择的版本'
