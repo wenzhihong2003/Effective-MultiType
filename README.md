@@ -638,7 +638,7 @@ adapter.notifyDataSetChanged();
 
 我向来是不太在意项目的 star 数目的，但热衷于把我的好东西分享给更多人使用，因此在[我的 GitHub](https://github.com/drakeet) 首页我不会把我一些高 star 项目摆出来，而是放一些我觉得代码相对比较好的项目。这是我的动力，我想写一份完美的代码，就像王垠的 40 行一样，达到自觉得天衣无缝、犹如天神衣袖般的优雅，嗯，要是哪天我做到了，我就停止开源，哈哈。
 
-话说回来，这个项目，特别感谢大家的帮忙、反馈，感谢一些朋友的 PR 和贡献，是你们让我觉得开源是一件除了完善自我之外 还充满了意义的一件事情 -- 能够与更多人协同，能够面向更宽广的世界，谢谢大家！以下是感谢名单：
+话说回来，这个项目，特别感谢大家的帮忙、反馈，感谢一些朋友的 PR、贡献和推荐，是你们让我觉得开源是一件除了完善自我之外 还充满了意义的一件事情 -- 能够与更多人协同，能够面向更宽广的世界，谢谢大家！以下是感谢名单：
 
 [70kg](https://github.com/70kg)、[zubinxiong](https://github.com/zubinxiong)、[WanLiLi](https://github.com/WanLiLi)、[代码家](https://github.com/daimajia)、[CaMnter](https://github.com/CaMnter)、[android-xiaowei](https://github.com/android-xiaowei)、[burgessjp](https://github.com/burgessjp)、[lixi0912](https://github.com/lixi0912)、[simidaxu](https://github.com/simidaxu)、[咕咚](https://github.com/maoruibin)、[LuckyJayce](https://github.com/LuckyJayce)、[BelongsH](https://github.com/BelongsH)、[tmexcept](https://github.com/tmexcept)、[TellH](https://github.com/TellH)、[Ray Pan](https://github.com/Panl)、[Zack](https://github.com/DearZack)、[Chris](https://github.com/ChrisZou)
 
