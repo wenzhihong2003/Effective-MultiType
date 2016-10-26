@@ -28,6 +28,7 @@
   - 线性和网格布局混排
   - drakeet/TimeMachine
   - 类似 Bilibili iOS 端首页
+  - 第三方示例：采用真实的网络请求数据演示 MultiType 框架的用法
 - [设计思想](#设计思想)
 - [Q & A](#q--a)
   - Q: 全局类型池的主要作用是什么，能取消全局的使用吗？
@@ -597,6 +598,9 @@ adapter.notifyDataSetChanged();
   使用 `MultiType` 轻松实现类似 Bilibili iOS 端首页复杂的多类型列表视图，包括嵌套横向 `RecyclerView` Item.
 
   <img src="https://github.com/drakeet/MultiType/raw/master/art/screenshot-bilibili.png" width="270" height="486"/>
+  
+- 第三方示例：[采用真实的网络请求数据演示 MultiType 框架的用法 by WanLiLi](https://github.com/WanLiLi/MultiTypeDemo)
+
 
 # 设计思想
 
