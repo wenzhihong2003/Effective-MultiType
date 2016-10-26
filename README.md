@@ -640,7 +640,7 @@ adapter.notifyDataSetChanged();
 
 话说回来，这个项目，特别感谢大家的帮忙、反馈，感谢一些朋友的 PR 和贡献，是你们让我觉得开源是一件除了完善自我之外 还充满了意义的一件事情 -- 能够与更多人协同，能够面向更宽广的世界，谢谢大家！以下是感谢名单：
 
-
+[70kg](https://github.com/70kg)、[zubinxiong](https://github.com/zubinxiong)、[WanLiLi](https://github.com/WanLiLi)、[代码家](https://github.com/daimajia)、[CaMnter](https://github.com/CaMnter)、[android-xiaowei](https://github.com/android-xiaowei)、[burgessjp](https://github.com/burgessjp)、[lixi0912](https://github.com/lixi0912)、[simidaxu](https://github.com/simidaxu)、[咕咚](https://github.com/maoruibin)、[LuckyJayce](https://github.com/LuckyJayce)、[BelongsH](https://github.com/BelongsH)、[tmexcept](https://github.com/tmexcept)、[TellH](https://github.com/TellH)、[Ray Pan](https://github.com/Panl)、[Zack](https://github.com/DearZack)、[Chris](https://github.com/ChrisZou)
 
 # 引用文献
 
