@@ -42,7 +42,7 @@
 - 周到，支持 局部类型池 和 全局类型池，并支持二者共用，当出现冲突时，以局部的为准
 - 灵活，几乎所有的部件(类)都可被替换、可继承定制，留够了丰富的可覆写的接口
 - 轻盈，整个类库只有 10 个类文件，`aar` 或 `jar` 包大小只有 10KB
-- 纯粹，只负责本分工作，专注多类型的列表试图类型分发
+- 纯粹，只负责本分工作，专注多类型的列表视图类型分发
 - 高效，没有性能损失，内存友好，最大限度发挥 `RecyclerView` 的复用性
 - 可读，代码清晰干净、设计精巧，极力避免复杂化，可读性很好，为拓展和自行解决问题提供了基础
 
@@ -64,7 +64,7 @@ dependencies {
 }
 ```
 
-注：**MultiType** 内部引用了 `support-annotations:24.2.1` 和 `recyclerview-v7:24.2.1`，如果你不想使用者两个版本，可以使用 `exclude` 将它们排除掉，然后自行引入你选择的版本，其中 `support-annotations` 属于注解库，可不引入。示例如下：
+注：**MultiType** 内部引用了 `recyclerview-v7:24.2.1`，如果你不想使用这个版本，可以使用 `exclude` 将它排除掉，再自行引入你选择的版本。示例如下：
 
 
 ```groovy
@@ -72,7 +72,6 @@ dependencies {
     compile('me.drakeet.multitype:multitype:2.2.0', {
        exclude group: 'com.android.support'
     })
-    compile 'com.android.support:support-annotations:你选择的版本'
     compile 'com.android.support:recyclerview-v7:你选择的版本'
 }
 ```
@@ -166,7 +165,7 @@ public class MainActivity extends AppCompatActivity {
 
 ## 使用 MultiTypeTemplates 插件自动生成代码
 
-上面我们介绍了通过 3 个步骤完成 **MultiType** 的初次接入使用，实际上这个过程可以更加简化，**MultiType** 提供了 Android Studio 插件来自动生成代码：**MultiTypeTemplates**，源码也是开源的，https://github.com/drakeet/MultiTypeTemplates ，不仅提供了一键生成 `Item` 和 `ItemViewProvider`，而且是一个很好的利用代码模版自动生成代码的示例，其中使用到了官方提供的代码模版 API，也用到了我自己发明的更加灵活修改模版内容的方法，有兴趣做这方面插件的可以看看。
+上面我们介绍了通过 3 个步骤完成 **MultiType** 的初次接入使用，实际上这个过程可以更加简化，**MultiType** 提供了 Android Studio 插件来自动生成代码：**MultiTypeTemplates**，源码也是开源的，https://github.com/drakeet/MultiTypeTemplates ，不仅提供了一键生成 `Item` 和 `ItemViewProvider`，而且**是一个很好的利用代码模版自动生成代码的示例**，其中使用到了官方提供的代码模版 API，也用到了我自己发明的更灵活修改模版内容的方法，有兴趣做这方面插件的可以看看。
 
 话说回来，安装和使用 **MultiTypeTemplates** 非常简单：
 
@@ -178,19 +177,18 @@ public class MainActivity extends AppCompatActivity {
 
 比如你输入的是 "Category"，它就会自动生成 `Category.java` 和 `CategoryViewProvider.java`.
 
-特别方便，相信你会很喜欢它。未来这个插件也将会支持自动生成布局文件，这是目前欠缺的。但其实 AS 在这方面已经很方便了，对布局 `R.layout.item_category` 使用 `alt + enter` 即可自动生成布局文件。
+特别方便，相信你会很喜欢它。未来这个插件也将会支持自动生成布局文件，这是目前欠缺的。但其实 AS 在这方面已经很方便了，对布局 `R.layout.item_category` 使用 `alt + enter` 快捷键即可自动生成布局文件。
 
 
 ## 使用 全局类型池
 
-**MultiType** 支持 局部类型池 和 全局类型池，并支持二者共用，当出现冲突时，以局部的为准。使用局部类型池就如上面的示例，调用 `adapter.register()` 即可。而使用全局类型池也是很容易的，
-**MultiType** 提供了一个内置的 `GlobalMultiTypePool` 作为全局类型池来存储类型和 view 关系，使用如下：
+在基础用法中，我们并没有提到 全局类型池，实际上，**MultiType** 支持 局部类型池 和 全局类型池，并支持二者共用，当出现冲突时，以局部的为准。使用局部类型池就如上面的示例，调用 `adapter.register()` 即可。而使用全局类型池也是很容易的，**MultiType** 提供了一个内置的 `GlobalMultiTypePool` 作为全局类型池来存储类型和 view 关系，使用如下：
 
-只要在你使用你的全局类型之前 任意位置注册类型即可，通过调用 `GlobalMultiTypePool.register()` 静态方法完成注册。推荐统一在 `Application` 初始化便进行注册，这样代码便于寻找和阅读。
+只要在使用你的全局类型之前任意位置注册类型，通过调用 `GlobalMultiTypePool.register()` 静态方法完成注册。推荐统一在 `Application` 初始化便进行注册，这样代码便于寻找和阅读。
 
-之后回到你的 `Activity`，调用 `adapter.applyGlobalMultiTypePool()` 方法应用你注册过的全局类型。
+之后回到你的 `Activity`，调用 `adapter.applyGlobalMultiTypePool()` 方法应用你注册过的全局类型即可。
 
-`GlobalMultiTypePool` 让一些普适性的类型能够全局共用，但使用全局类型池不当也会带来问题，这也是没有全然采用全局类型池的原因。问题在于全局类型池是静态的，如果你在 `Activity` 中注册全局类型，并传入带 `Activity` 引用的变量进去，就可能造成内存泄露。举个例子，如下是一个很常见的场景，我们把一个点击回调传递给 `provider`，并注册进了全局类型池：
+`GlobalMultiTypePool` 让一些普适性的类型能够全局共用，但使用全局类型池不当也会带来问题，这也是没有全然采用全局类型池的原因。问题在于全局类型池是静态的，如果你在 `Activity` 中注册**全局**类型（虽然并不推荐，因为全局类型最好统一在一个地方注册，便于统一管理），并传入带 `Activity` 引用的变量进去，就可能造成内存泄露。举个例子，如下是一个很常见的场景，我们把一个点击回调传递给 `provider`，并注册到全局类型池：
 
 ```java
 public class LeakActivity extends Activity {
@@ -214,6 +212,7 @@ public class LeakActivity extends Activity {
 
         /* 在 applyGlobalMultiTypePool 之前注册全局 */
         GlobalMultiTypePool.register(Post.class, new PostViewProvider(listener));
+        
         adapter.applyGlobalMultiTypePool(); // <- 使全局的类型加入到局部中来
 
         recyclerView.setAdapter(adapter);
@@ -221,9 +220,9 @@ public class LeakActivity extends Activity {
 }
 ```
 
-由于 匿名内部类 或 非静态内部类，都会默认持有 外部类 的引用，比如这里的 `OnClickListener` 匿名类对象会持有 `LeakActivity.this`，当 `listener` 传递给 `new PostViewProvider()` 构造函数的时候，`GlobalMultiTypePool` 内置的静态类型池将长久持有 `provider - listener - LeakActivity.this` 引用链，若没有及时释放，将引起内存泄露。
+由于 Java 匿名内部类 或 非静态内部类，都会默认持有 外部类 的引用，比如这里的 `OnClickListener` 匿名类对象会持有 `LeakActivity.this`，当 `listener` 传递给 `new PostViewProvider()` 构造函数的时候，`GlobalMultiTypePool` 内置的静态类型池将长久持有 `provider -> listener -> LeakActivity.this` 引用链，若没有及时释放，将引起内存泄露。
 
-因此，在使用全局类型池的时候，最好不要给 `provider` 传递回调对象或者外部引用，否则就应该做手动释放。除此之外，全局类型池没有什么其他问题了，类型池都只会持有 `class` 和非常轻薄的 `provider` 对象，我做过一个试验，就算拥有上万个类型和 `provider`，内存占用也是很少而且索引速度特别快，在主线程连续注册一万个类型花费不过 10 毫秒的时间，何况一般一个应用根本不可能有这么多类型，完全不用担心这方面的问题。
+因此，在使用全局类型池时，最好不要给 `provider` 传递回调对象或者外部引用，否则就应该做手动释放。除此之外，全局类型池没有什么其他问题，类型池都只会持有 `class` 和非常轻薄的 `provider` 对象。我做过一个试验，就算拥有上万个类型和 `provider`，内存占用也是很少的，而且索引速度特别快，在主线程连续注册一万个类型花费不过 10 毫秒的时间，何况一般一个应用根本不可能有这么多类型，完全不用担心这方面的问题。
 
 另外一个特性是，不管是全局类型池还是局部类型池，都支持重复注册类型。当发现重复时，之后注册的会把之前注册的类型覆盖掉，因此对于全局类型池，需要谨慎进行重复注册，以免影响到其他地方。
 
@@ -232,7 +231,7 @@ public class LeakActivity extends Activity {
 
 **MultiType** 支持一个类型对应多个 `ViewProvider`，但仅限于在不同的列表中。比如你在 `adapter1` 中注册了 `Post.class` 对应 `SinglePostViewProvider`，在另一个 `adapter2` 中注册了 `Post.class` 对应 `PostDetailViewProvider`，这便是一对多的场景，只要是在不同的局部类型池中，无论如何都不会相互干扰，都是允许的。
 
-而对于在 同一个列表中 一对多的问题，首先这种场景非常少见，再者不管支不支持一对多，开发者都要去判断哪个时候运用哪个 `ViewProvider`，这是逃不掉的，否则程序就无所适从了。因此，**MultiType** 不去特别解决这个问题，如果要实现同一个列表中一对多，只要空继承你的类型，然后把它视为新的类型，注册到你的类型池中即可。
+而对于在 同一个列表中 一对多的问题，首先这种场景非常少见，再者不管支不支持一对多，开发者都要去判断哪个时候运用哪个 `ViewProvider`，这是逃不掉的，否则程序就无所适从了。因此，**MultiType** 不去特别解决这个问题，**如果要实现同一个列表中一对多，只要空继承你的类型，然后把它视为新的类型，注册到你的类型池中即可**。
 
 
 ## 与 `provider` 通讯
@@ -249,7 +248,7 @@ OnClickListener listener = new OnClickListener() {
 adapter.register(Post.class, new PostViewProvider(xxx, listener));
 ```
 
-但话说回来，对于点击事件，能够不依赖 `provider` 外部的内容的话，最好就在 `provider` 内部完成。`provider` 内部能够拿到 View 也能够拿到数据，大部分情况下，完全有能力不依赖外部独立完成逻辑。这样能够使代码更加模块化，便于解耦，例如：
+但话说回来，对于点击事件，能不依赖 `provider` 外部内容的话，最好就在 `provider` 内部完成。`provider` 内部能够拿到 Views 也能够拿到数据，大部分情况下，完全有能力不依赖外部独立完成逻辑。这样能够使代码更加模块化，便于解耦，例如：
 
 ```java
 public class SquareViewProvider extends ItemViewProvider<Square, SquareViewProvider.ViewHolder> {
@@ -288,7 +287,7 @@ public class SquareViewProvider extends ItemViewProvider<Square, SquareViewProvi
 
 ## 使用断言，比传统 Adapter 更加易于调试
 
-**众所周知，如果一个传统的 `RecyclerView` `Adapter` 内部有异常导致崩溃，它的异常栈是不会指向你的 `Activity` 的**，这给我们在开发调试过程中带来了麻烦，如果我们的 `Adapter` 是复用的，我们就不知道是哪一个页面崩溃。而对于 `MultiTypeAdapter`，我们显然要用于多个地方，而且可能出现开发者忘记注册类型等等问题，为了便于调试，我提供了很方便的断言 API: `MultiTypeAsserts`，使用方式如下：
+**众所周知，如果一个传统的 `RecyclerView` `Adapter` 内部有异常导致崩溃，它的异常栈是不会指向到你的 `Activity` 的**，这给我们在开发调试过程中带来了麻烦，如果我们的 `Adapter` 是复用的，我们就不知道是哪一个页面崩溃。而对于 `MultiTypeAdapter`，我们显然要用于多个地方，而且可能出现开发者忘记注册类型等等问题。为了便于调试，我提供了很方便的断言 API: `MultiTypeAsserts`，使用方式如下：
 
 ```java
 import static me.drakeet.multitype.MultiTypeAsserts.assertAllRegistered;
@@ -321,7 +320,7 @@ public class SimpleActivity extends MenuBaseActivity {
 }
 ```
 
-这样做以后，`MultiTypeAdapter` 相关的异常都会报到你的 `Activity`，并且会注明详细出错的原因，关于这个类的源代码也是很简单，有兴趣可以直接看看源码：[drakeet/multitype/MultiTypeAsserts.java](https://github.com/drakeet/MultiType/blob/master/library/src/main/java/me/drakeet/multitype/MultiTypeAsserts.java)
+这样做以后，`MultiTypeAdapter` 相关的异常都会报到你的 `Activity`，并且会注明详细出错的原因，而如果符合断言，断言代码不会有任何副作用或影响你的代码逻辑，它相当于废话。关于这个类的源代码也是很简单，有兴趣可以直接看看源码：[drakeet/multitype/MultiTypeAsserts.java](https://github.com/drakeet/MultiType/blob/master/library/src/main/java/me/drakeet/multitype/MultiTypeAsserts.java)
 
 
 ## 支持 Google AutoValue
