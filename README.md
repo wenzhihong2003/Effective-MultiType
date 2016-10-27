@@ -15,7 +15,7 @@
   - [使用 MultiTypeTemplates 插件自动生成代码](#使用-multitypetemplates-插件自动生成代码)
   - [使用 全局类型池](#使用-全局类型池)
   - [一个类型对应多个 ViewProvider](#一个类型对应多个-viewprovider)
-  - [与 provider 通讯](#与-provider-通讯)
+  - [与 ViewProvider 通讯](#与-viewprovider-通讯)
   - [使用断言，比传统 Adapter 更加易于调试](#使用断言比传统-adapter-更加易于调试)
   - [支持 Google AutoValue](#支持-google-autovalue)
   - [对 class 进行二级分发](#对-class-进行二级分发)
@@ -235,9 +235,9 @@ public class LeakActivity extends Activity {
 而对于在 同一个列表中 一对多的问题，首先这种场景非常少见，再者不管支不支持一对多，开发者都要去判断哪个时候运用哪个 `ViewProvider`，这是逃不掉的，否则程序就无所适从了。因此，**MultiType** 不去特别解决这个问题，**如果要实现同一个列表中一对多，只要空继承你的类型，然后把它视为新的类型，注册到你的类型池中即可**。
 
 
-## 与 `provider` 通讯
+## 与 `ViewProvider` 通讯
 
-`provider` 对象可以接受外部类型、回调函数，只要在使用之前，传递进去即可，例如：
+`ItemViewProvider` 对象可以接受外部类型、回调函数，只要在使用之前，传递进去即可，例如：
 
 ```java
 OnClickListener listener = new OnClickListener() {
