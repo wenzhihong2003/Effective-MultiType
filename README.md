@@ -536,7 +536,7 @@ public class Comment implements Item {
 ```json
 [
     {
-        "content":"I have released the MultiType v2.2.0", 
+        "content":"I have released the MultiType v2.2.1", 
         "comments":[
             {"content":"great"},
             {"content":"I love your post!"}
