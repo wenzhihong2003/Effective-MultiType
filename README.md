@@ -599,7 +599,7 @@ adapter.notifyDataSetChanged();
 
   <img src="https://github.com/drakeet/MultiType/raw/master/art/screenshot-bilibili.png" width="270" height="486"/>
   
-- 第三方示例：[采用真实的网络请求数据演示 MultiType 框架的用法 by WanLiLi](https://github.com/WanLiLi/MultiTypeDemo)
+附：一个第三方示例，[采用真实的网络请求数据演示 MultiType 框架的用法 by WanLiLi](https://github.com/WanLiLi/MultiTypeDemo). 点评：看了下，代码不够清爽，但实现效果十分不错。
 
 
 # 设计思想
