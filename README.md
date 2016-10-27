@@ -585,19 +585,19 @@ adapter.notifyDataSetChanged();
 
   使用 `MultiType` 和 `GridLayoutManager` 实现网格和线性混合布局，实现一个选集页面。
 
-  <img src="https://github.com/drakeet/MultiType/raw/master/art/screenshot-multigrid.png" width=270 height=486/>
+  <img src="http://ww1.sinaimg.cn/large/86e2ff85gw1f96yfddvksj21401z479t.jpg" width=270 height=486/>
 
 - [drakeet/TimeMachine](https://github.com/drakeet/TimeMachine)
 
   TimeMachine 使用了 **MultiType** 来创建一个复杂的聊天页面，页面和需求虽然复杂，但使用 **MultiType** 显得轻松简单。
 
-  <img src="https://github.com/drakeet/TimeMachine/raw/master/art/ts2.jpg" width="270" height="486"/> <img src="http://ww3.sinaimg.cn/large/86e2ff85gw1f94i6ysea2j20k00zkmzn.jpg" width="270" height="486"/>
+  <img src="http://ww1.sinaimg.cn/large/86e2ff85gw1f96yg01b5nj20k00zkgng.jpg" width="270" height="486"/> <img src="http://ww3.sinaimg.cn/large/86e2ff85gw1f94i6ysea2j20k00zkmzn.jpg" width="270" height="486"/>
 
 - [类似 Bilibili iOS 端首页](https://github.com/drakeet/MultiType/tree/master/sample/src/main/java/me/drakeet/multitype/sample/bilibili)
 
   使用 `MultiType` 实现类似 Bilibili iOS 端首页复杂的多类型列表视图，包括嵌套横向 `RecyclerView`.
 
-  <img src="https://github.com/drakeet/MultiType/raw/master/art/screenshot-bilibili.png" width="270" height="486"/>
+  <img src="http://ww3.sinaimg.cn/large/86e2ff85gw1f96ygmroy0j21401z4nl9.jpg" width="270" height="486"/>
   
 附：一个第三方示例，[采用真实的网络请求数据演示 MultiType 框架的用法 by WanLiLi](https://github.com/WanLiLi/MultiTypeDemo). 点评：看了下，代码不够清爽，但实现效果十分不错。
 
