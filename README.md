@@ -49,7 +49,7 @@
 
 # 总览
 
-![](http://ww3.sinaimg.cn/large/86e2ff85gw1f93likz705j21kq14eqak.jpg)
+![](http://ww3.sinaimg.cn/large/86e2ff85gw1f96ml35fmrj21kw11uwlm.jpg)
 
 # MultiType 基础用法
 
