@@ -326,7 +326,7 @@ public class SimpleActivity extends MenuBaseActivity {
 
 ## 支持 Google AutoValue
 
-[AutoValue](https://github.com/google/auto/tree/master/value) 是 Google 提供的一个在 Java 实体类中自动生成代码的类库，使你更专注于处理项目的其他逻辑，它可使代码更少，更干净，以及更少的 bug. **MultiType** 支持 Google AutoValue，同时支持映射**子类**到同一 view provider 了，规则是：如果子类**有**注册，就用注册的映射关系；如果子类**没**注册，则该子类对象使用注册过的父类映射关系。相关源码：
+[AutoValue](https://github.com/google/auto/tree/master/value) 是 Google 提供的一个在 Java 实体类中自动生成代码的类库，使你更专注于处理项目的其他逻辑，它可使代码更少，更干净，以及更少的 bug. **MultiType** 支持 Google AutoValue，同时支持映射**子类**到同一 View Provider，规则是：如果子类**有**注册，就用注册的映射关系；如果子类**没**注册，则该子类对象使用注册过的父类映射关系。相关源码：
 
 ![](http://ww2.sinaimg.cn/large/86e2ff85gw1f93i8wgoubj21ee0nmdnk.jpg)
 
