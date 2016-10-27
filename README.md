@@ -4,7 +4,7 @@
 
 从前，我们写一个复杂的、多种 item view 类型的列表视图时，经常要做一堆繁琐的工作，而且很容易导致代码堆积严重：我们需要覆写 `RecyclerView.Adapter` 的 `getItemViewType` 方法，并罗列一些 `type` 整型常量，而且 `ViewHolder` 转型也比较麻烦。一旦我们需要新增一些新的 item view types ，就得去修改 `Adapter` 代码，步骤繁多，侵入较强。
 
-现在好了，我们有了 **MultiType**，简单来说，**MultiType** 就是一个多类型列表视图的中间层分发框架，它本是为 IM 视图开发的，IM 的消息类型是有很多不同种类的，并且新增频繁，而 **MultiType** 能够轻松胜任，使得随时可拓展新的类型进入列表当中。它内建了 `类型` - `View` 的复用池系统，支持 `RecyclerView`、复用，代码模块化，清晰而灵活。
+现在好了，我们有了 **MultiType**，简单来说，**MultiType** 就是一个多类型列表视图的中间层分发框架，它本是为 IM 视图开发的，IM 的消息类型是有很多不同种类的，并且新增频繁，而 **MultiType** 能够轻松胜任，随时可拓展新的类型进入列表当中。它内建了 `类型` - `View` 的复用池系统，支持 `RecyclerView`、复用，代码模块化，清晰而灵活。
 
 # 目录
 
@@ -28,7 +28,7 @@
   - 线性和网格布局混排
   - drakeet/TimeMachine
   - 类似 Bilibili iOS 端首页
-  - 第三方示例：采用真实的网络请求数据演示 MultiType 框架的用法
+  - 附第三方示例：采用真实的网络请求数据演示 MultiType 框架的用法
 - [设计思想](#设计思想)
 - [Q & A](#q--a)
   - Q: 全局类型池的主要作用是什么，能取消全局的使用吗？
@@ -41,7 +41,7 @@
 # MultiType 的特性
 
 - 周到，支持 局部类型池 和 全局类型池，并支持二者共用，当出现冲突时，以局部的为准
-- 灵活，几乎所有的部件(类)都可被替换、可继承定制，留够了丰富的可覆写的接口
+- 灵活，几乎所有的部件(类)都可被替换、可继承定制，面向接口/抽象编程
 - 轻盈，整个类库只有 10 个类文件，`aar` 或 `jar` 包大小只有 10KB
 - 纯粹，只负责本分工作，专注多类型的列表视图类型分发
 - 高效，没有性能损失，内存友好，最大限度发挥 `RecyclerView` 的复用性
@@ -53,7 +53,7 @@
 
 # MultiType 基础用法
 
-话不多说，我们先看看基础用法，使用 **MultiType** 一般情况下只要 maven 引入 + 三个步骤，之后还会介绍使用插件生成代码方式，步骤将更加简化：
+话不多说，我们先看看基础用法，使用 **MultiType** 一般情况下只要 maven 引入 + 三个小步骤。之后还会介绍使用插件生成代码方式，步骤将更加简化：
 
 ### 引入
 
@@ -223,14 +223,14 @@ public class LeakActivity extends Activity {
 
 由于 Java 匿名内部类 或 非静态内部类，都会默认持有 外部类 的引用，比如这里的 `OnClickListener` 匿名类对象会持有 `LeakActivity.this`，当 `listener` 传递给 `new PostViewProvider()` 构造函数的时候，`GlobalMultiTypePool` 内置的静态类型池将长久持有 `provider -> listener -> LeakActivity.this` 引用链，若没有及时释放，将引起内存泄露。
 
-因此，在使用全局类型池时，最好不要给 `provider` 传递回调对象或者外部引用，否则就应该做手动释放。除此之外，全局类型池没有什么其他问题，类型池都只会持有 `class` 和非常轻薄的 `provider` 对象。我做过一个试验，就算拥有上万个类型和 `provider`，内存占用也是很少的，而且索引速度特别快，在主线程连续注册一万个类型花费不过 10 毫秒的时间，何况一般一个应用根本不可能有这么多类型，完全不用担心这方面的问题。
+因此，在使用全局类型池时，最好不要给 `provider` 传递回调对象或者外部引用，否则就应该做手动释放。除此之外，全局类型池没有什么其他问题，类型池都只会持有 `class` 和非常轻薄的 `provider` 对象。我做过一个试验，就算拥有上万个类型和 `provider`，内存占用也是很少的，而且索引速度很快，在主线程连续注册一万个类型花费不过 10 毫秒的时间，何况一般一个应用根本不可能有这么多类型，完全不用担心这方面的问题。
 
 另外一个特性是，不管是全局类型池还是局部类型池，都支持重复注册类型。当发现重复时，之后注册的会把之前注册的类型覆盖掉，因此对于全局类型池，需要谨慎进行重复注册，以免影响到其他地方。
 
 
 ## 一个类型对应多个 `ViewProvider`
 
-**MultiType** 支持一个类型对应多个 `ViewProvider`，但仅限于在不同的列表中。比如你在 `adapter1` 中注册了 `Post.class` 对应 `SinglePostViewProvider`，在另一个 `adapter2` 中注册了 `Post.class` 对应 `PostDetailViewProvider`，这便是一对多的场景，只要是在不同的局部类型池中，无论如何都不会相互干扰，都是允许的。
+**MultiType** 天然支持一个类型对应多个 `ViewProvider`，但仅限于在不同的列表中。比如你在 `adapter1` 中注册了 `Post.class` 对应 `SinglePostViewProvider`，在另一个 `adapter2` 中注册了 `Post.class` 对应 `PostDetailViewProvider`，这便是一对多的场景，只要是在不同的局部类型池中，无论如何都不会相互干扰，都是允许的。
 
 而对于在 同一个列表中 一对多的问题，首先这种场景非常少见，再者不管支不支持一对多，开发者都要去判断哪个时候运用哪个 `ViewProvider`，这是逃不掉的，否则程序就无所适从了。因此，**MultiType** 不去特别解决这个问题，**如果要实现同一个列表中一对多，只要空继承你的类型，然后把它视为新的类型，注册到你的类型池中即可**。
 
@@ -249,7 +249,7 @@ OnClickListener listener = new OnClickListener() {
 adapter.register(Post.class, new PostViewProvider(xxx, listener));
 ```
 
-但话说回来，对于点击事件，能不依赖 `provider` 外部内容的话，最好就在 `provider` 内部完成。`provider` 内部能够拿到 Views 也能够拿到数据，大部分情况下，完全有能力不依赖外部独立完成逻辑。这样能够使代码更加模块化，便于解耦，例如：
+但话说回来，对于点击事件，能不依赖 `provider` 外部内容的话，最好就在 `provider` 内部完成。`provider` 内部能够接收到 Views 和 数据，大部分情况下，完全有能力不依赖外部 独立完成逻辑。这样能使代码更加模块化，便于解耦，例如：
 
 ```java
 public class SquareViewProvider extends ItemViewProvider<Square, SquareViewProvider.ViewHolder> {
@@ -288,7 +288,7 @@ public class SquareViewProvider extends ItemViewProvider<Square, SquareViewProvi
 
 ## 使用断言，比传统 Adapter 更加易于调试
 
-**众所周知，如果一个传统的 `RecyclerView` `Adapter` 内部有异常导致崩溃，它的异常栈是不会指向到你的 `Activity` 的**，这给我们在开发调试过程中带来了麻烦，如果我们的 `Adapter` 是复用的，我们就不知道是哪一个页面崩溃。而对于 `MultiTypeAdapter`，我们显然要用于多个地方，而且可能出现开发者忘记注册类型等等问题。为了便于调试，我提供了很方便的断言 API: `MultiTypeAsserts`，使用方式如下：
+**众所周知，如果一个传统的 `RecyclerView` `Adapter` 内部有异常导致崩溃，它的异常栈是不会指向到你的 `Activity` 的**，这给我们开发调试过程中带来了麻烦，如果我们的 `Adapter` 是复用的，就不知道是哪一个页面崩溃。而对于 `MultiTypeAdapter`，我们显然要用于多个地方，而且可能出现开发者忘记注册类型等等问题。为了便于调试，**MultiType** 提供了很方便的断言 API: `MultiTypeAsserts`，使用方式如下：
 
 ```java
 import static me.drakeet.multitype.MultiTypeAsserts.assertAllRegistered;
@@ -326,14 +326,14 @@ public class SimpleActivity extends MenuBaseActivity {
 
 ## 支持 Google AutoValue
 
-**MultiType** 支持 Google [AutoValue](https://github.com/google/auto/tree/master/value)，同时支持映射子类到同一 view provider 了，规则是：如果子类有注册，就用注册的映射关系；如果子类没注册，则该子类对象使用注册过的父类映射关系。
+**MultiType** 支持 Google [AutoValue](https://github.com/google/auto/tree/master/value)，同时支持映射子类到同一 view provider 了，规则是：如果子类有注册，就用注册的映射关系；如果子类没注册，则该子类对象使用注册过的父类映射关系。相关源码：
 
 ![](http://ww2.sinaimg.cn/large/86e2ff85gw1f93i8wgoubj21ee0nmdnk.jpg)
 
 
 ## 对 class 进行二级分发
 
-在我的 **TimeMachine** 中，我的消息数据结构是 `Message` - `MessageContent`，简单说就是，我的 `message` 对象们都是一样的 `Message.class`，但 `message` 包含的 `content` 对象不一样，我需要根据 `content` 来分发数据到 `ItemViewProvider`，但我加入 `Items` List 中的数据是整个 `Message.class`，因此，如果什么也不做，它们会被视为同一类型。对于这种场景，我们可以继承 `MultiTypeAdapter` 并覆写 `onFlattenClass(@NonNull Item message)` 方法进行二级分发，以我的 `MessageAdapter` 为例：
+在我的 **TimeMachine** 中，我的消息数据结构是 `Message` - `MessageContent`，简单说就是，我的 `message` 对象们都是一样的 `Message.class`，但 `message` 包含的 `content` 对象不一样，我需要根据 `content` 来分发数据到 `ItemViewProvider`，但我加入 `Items` List 中的数据都是 `Message.class`，因此，如果什么也不做，它们会被视为同一类型。对于这种场景，我们可以继承 `MultiTypeAdapter` 并覆写 `onFlattenClass(@NonNull Item message)` 方法进行二级分发，以我的 `MessageAdapter` 为例：
 
 ```java
 public class MessageAdapter extends MultiTypeAdapter {
@@ -354,7 +354,7 @@ public class MessageAdapter extends MultiTypeAdapter {
 
 ## MultiType 与下拉刷新、加载更多、HeaderView、FooterView、Diff
 
-**MultiType** 设计从始至终，都极力避免它往复杂化方向发展，一开始我的设计宗旨就是它应该是一个非常纯粹的、专一的项目，而非各种乱七八糟的功能都要囊括进来的多合一大型库，因此它很克制，期间有许多人给我发过一些无关特性的 Pull Request，表示感谢，但大多被拒绝了。
+**MultiType** 设计从始至终，都极力避免往复杂化方向发展，一开始我的设计宗旨就是它应该是一个非常纯粹的、专一的项目，而非各种乱七八糟的功能都要囊括进来的多合一大型库，因此它很克制，期间有许多人给我发过一些无关特性的 Pull Request，表示感谢，但全被拒绝了。
 
 对于很多人关心的 下拉刷新、加载更多、HeaderView、FooterView、Diff 这些功能特性，其实都不应该是 **MultiType** 的范畴，**MultiType** 的分内之事是做类型、事件与 View 的分发、连接工作，其余无关的需求，都是可以在 **MultiType** 外面完成，或者通过继承进行自行封装和拓展，而作为一个基础、公共类库，我想它是不应该包含这些内容。
 
@@ -366,7 +366,7 @@ public class MessageAdapter extends MultiTypeAdapter {
 
 - **加载更多：**
 
-  `RecyclerView` 提供了 `addOnScrollListener` 滚动位置变换监听，要实现加载更多，只要监听并检测列表是否滚动到底部即可，有多种方式，鉴于 `LayoutManager` 本应该只做布局相关的事务，因此我们推荐直接在 `OnScrollListener` 层面进行判断。提供一个简单版 `OnScrollListener` 继承类：
+  `RecyclerView` 提供了 `addOnScrollListener` 滚动位置变化监听，要实现加载更多，只要监听并检测列表是否滚动到底部即可，有多种方式，鉴于 `LayoutManager` 本应该只做布局相关的事务，因此我们推荐直接在 `OnScrollListener` 层面进行判断。提供一个简单版 `OnScrollListener` 继承类：
 
   ```java
   public abstract class OnLoadMoreListener extends RecyclerView.OnScrollListener {
@@ -465,7 +465,7 @@ public class HorizontalItemViewProvider
 
 ## 实现线性布局和网格布局混排列表
 
-这个课题其实不属于 **MultiType** 的范畴，**MultiType** 的职责是做数据类型分发，而不是布局，但鉴于很多复杂页面都会需要线性布局和网格布局混排，我就简单讲一讲，关键在于 `RecyclerView` 的 `LayoutManager`，虽然是线性和网格混合，但实现起来其实只要一个网格布局 `GridLayoutManager`，如果你查看 `GridLayoutManager` 的官方源码，你会发现它其实继承自 `LinearLayoutManager`. 以下是示例和解释：
+这个课题其实也不属于 **MultiType** 的范畴，**MultiType** 的职责是做数据类型分发，而不是布局，但鉴于很多复杂页面都会需要线性布局和网格布局混排，我就简单讲一讲，关键在于 `RecyclerView` 的 `LayoutManager`. 虽然是线性和网格混合，但实现起来其实只要一个网格布局 `GridLayoutManager`，如果你查看 `GridLayoutManager` 的官方源码，你会发现它其实继承自 `LinearLayoutManager`. 以下是示例和解释：
 
 ```java
 public class MultiGridActivity extends MenuBaseActivity {
@@ -569,7 +569,7 @@ items.addAll(flattenData(posts));
 adapter.notifyDataSetChanged();
 ```
 
-整个过程其实并不困难，相信大家都已经理解和懂得处理了。
+整个过程其实并不困难，相信大家都已经理解了。
 
 # 更多示例
 
@@ -612,21 +612,21 @@ adapter.notifyDataSetChanged();
 
 - 要灵活，便于拓展和适应各种需求
 
-  很多人会得意地告诉我，他们把 **MultiType** 源码精简成三四个类，甚至一个类，以为代码越少就是越好，这我也是不能赞同的。**MultiType** 考虑得比他们更远，这是一个提供给大众使用的类库，过度的精简只会使得灵活性大幅失去。**它或许不是使用起来最简单的，但很可能是使用起来最灵活的。** 在我看来，灵活性的优先级大于简单性。因此，**MultiType** 各个组件都是以接口进行连接，这意味着它所有的角色、组件都可以被替换，或者被拓展和继承。如果你觉得它使用起来还不够简单，完全可以通过继承来封装出更具体符合你使用需求的方法。它已经暴露了足够丰富、周到的接口以供继承。我们不应该直接去修改源码，这会导致一旦后续发现你的精简版满足不了你的需求时，已经没有回头路了。
+  很多人会得意地告诉我，他们把 **MultiType** 源码精简成三四个类，甚至一个类，以为代码越少就是越好，这我也是不能赞同的。**MultiType** 考虑得比他们更远，这是一个提供给大众使用的类库，过度的精简只会使得灵活性大幅失去。**它或许不是使用起来最简单的，但很可能是使用起来最灵活的。** 在我看来，灵活性的优先级大于简单性。因此，**MultiType** 各个组件都是以接口或抽象进行连接，这意味着它所有的角色、组件都可以被替换，或者被拓展和继承。如果你觉得它使用起来还不够简单，完全可以通过继承来封装出更具体符合你使用需求的方法。它已经暴露了足够丰富、周到的接口以供自行实现。我们不应该直接去修改源码，这会导致一旦后续发现你的精简版满足不了你的需求时，已经没有回头路了。
 
 - 要直观，使用起来能令项目代码更清晰、模块化
 
-  **MultiType** 提供的 `ItemViewProvider` 沿袭了 `RecyclerView Adapter` 的接口命名，使用起来更加舒适，符合习惯和直觉。另外，手动写一个新的 `ItemViewProvider` 需要提供了 类型 泛型，虽然略微有点儿麻烦，但能带来一些好处，指定泛型之后，我们不再需要自己做强制转型，而且代码能够显式表明 `ItemViewProvider` 和 `Item class` 的对应关系。遵循了简单可依赖的原则。另外，现在我们有 MultiTypeTemplates 插件来自动生成代码，这个过程变得更加顺滑简单。
+  **MultiType** 提供的 `ItemViewProvider` 沿袭了 `RecyclerView Adapter` 的接口命名，使用起来更加舒适，符合习惯。另外，手动写一个新的 `ItemViewProvider` 需要提供了 类型 泛型，虽然略微有点儿麻烦，但能带来一些好处，指定泛型之后，我们不再需要自己做强制转型，而且代码能够显式表明 `ItemViewProvider` 和 `Item class` 的对应关系，遵循了简单可依赖的原则。另外，现在我们有 MultiTypeTemplates 插件来自动生成代码，这个过程变得更加顺滑简单。
   
 # Q & A
 
 - **Q: 全局类型池的主要作用是什么，能取消全局的使用吗？**
 
-  A: 全局类型池的主要作用是，注册一些能够各个地方复用的类型，可以存一些比如：Line、Space、Header、LoadMoreFooter. 默认情况下，全局类型池是不会生效的，只有你调用 `adapter.applyGlobalMultiTypePool()` 使用全局类型池，它才会被应用，并加入到你当下的局部类型池中。没有调用这一行代码，全局的就不会参入你的局部类型池，也就是说，终归是局部类型池，只是你确定使用全局的时候，它会把全局的拷贝一份，然后加入到你的这个局部类型池中。
+  A: 全局类型池的主要作用是，注册一些能够各个地方复用的类型，可以存一些比如：Line、Space、Header、LoadMoreFooter. 默认情况下，全局类型池是不会生效的，只有你调用 `adapter.applyGlobalMultiTypePool()` 使用全局类型池，它才会被应用，并加入到你当下的局部类型池中。没有调用这一行代码，全局的就不会参入你的局部类型池。也就是说，终归是局部类型池，只是你确定使用全局的时候，它会把全局的拷贝一份，然后加入到你这个局部类型池中。
   
 - **Q: 使用全局类型的话，只能是在 Application 中进行注册吗？**
 
-  A: 不，只是推荐这么做而已。在 `Application` 初始注册，能够确保类型在使用之前就注册好。另外，位置统一固定，有利于寻找代码。不然出了问题，你需要到处寻找是在哪注册了全局类型。注册全局的代码如果分散到各个地方，就不好控制和追寻，因此最好统一一个地方注册。换一个角度来说，注册全局类型的动作存在着约定性，约定的东西、可被破坏的东西，有时会比较不可靠，**因此能够使用局部类型池的情况下，最好使用局部类型池。**
+  A: 不，只是推荐这么做而已。在 `Application` 初始注册，能够确保类型在使用之前就注册好。另外，位置统一固定，有利于寻找代码。不然出了问题，你需要到处寻找是在哪注册了全局类型。注册全局的代码如果分散到各个地方，就不好控制和追寻，因此最好统一一个地方注册。换一个角度来说，注册全局类型的动作存在着约定性，约定的东西、可被破坏的东西，有时会比较不可靠，**因此能够使用局部类型池的情况，最好使用局部类型池。**
   
 - **Q: 为什么不全然使用全局类型池？**
 
@@ -634,7 +634,7 @@ adapter.notifyDataSetChanged();
   
 - **Q: 觉得 MultiType 不够精简，应该怎么做？**
 
-  A: 我在前面 "设计思想" 中说了，_MultiType 或许不是使用起来最简单的，但很可能是使用起来最灵活的。_其中的缘由是它高度可定制、可拓展，而不是把一些路封死。作为一个基础类库，简单和灵活需要一个均衡点，过度精简便要以失去灵活性为代价。如果觉得 **MultiType** 不够精简，想将它修改得更加容易使用，我推荐的方式是去继承 `MultiTypeAdapter` 或 `ItemViewProvider`，而不是到底层直接去修改、破坏它们。利用开放接口或继承的做法不管对于 **MultiType** 还是其它开源库，都应该是定制的首选。
+  A: 在前面 "设计思想" 中我们谈到：_MultiType 或许不是使用起来最简单的，但很可能是使用起来最灵活的。_其中的缘由是它高度可定制、可拓展，而不是把一些路封死。作为一个基础类库，简单和灵活需要一个均衡点，过度精简便要以失去灵活性为代价。如果觉得 **MultiType** 不够精简，想将它修改得更加容易使用，我推荐的方式是去继承 `MultiTypeAdapter` 或 `ItemViewProvider`，甚至你可以重新实现一个 `TypePool` 再设置给 `MultiTypeAdapter`. 我们不应该直接到底层去修改、破坏它们。总之，利用开放接口或继承的做法不管对于 **MultiType** 还是其它开源库，都应该是定制的首选。
   
 # 感谢
 
