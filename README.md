@@ -67,8 +67,7 @@ dependencies {
 }
 ```
 
-注：**MultiType** 内部引用了 `recyclerview-v7:24.2.1`，如果你不想使用这个版本，可以使用 `exclude` 将它排除掉，再自行引入你选择的版本。示例如下：
-
+> 注：**MultiType** 内部引用了 `recyclerview-v7:24.2.1`，如果你不想使用这个版本，可以使用 `exclude` 将它排除掉，再自行引入你选择的版本。示例如下：
 
 ```groovy
 dependencies {
