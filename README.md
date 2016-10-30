@@ -27,10 +27,10 @@
   - [数据扁平化处理](#数据扁平化处理)
 - [更多示例](#更多示例)
   - drakeet/about-page
+  - 仿造**微博**的数据结构和二级 ViewProvider
   - 线性和网格布局混排
   - drakeet/TimeMachine
   - 类似 Bilibili iOS 端首页
-  - 附第三方示例：采用真实的网络请求数据演示 MultiType 框架的用法
 - [设计思想](#设计思想)
 - [Q & A](#q--a)
   - Q: 全局类型池的主要作用是什么，能取消全局的使用吗？
@@ -581,6 +581,13 @@ adapter.notifyDataSetChanged();
   一个 Material Design 的关于页面，核心基于 MultiType，包含了多种 `Item`s，美观，容易使用。
 
   ![](http://ww2.sinaimg.cn/large/86e2ff85gw1f93gq2tevbj21700pcjyp.jpg)
+  
+- [仿造**微博**的数据结构和二级 ViewProvider](https://github.com/drakeet/MultiType/tree/master/sample/src/main/java/me/drakeet/multitype/sample/weibo)
+
+类似微博数据结构的示例，数据两层结构，Item 也是两层结构：一层框架（包含头像用户名等），一层 content view(微博内容). 展示了 **MultiType** 优秀的可拓展能力。
+
+<img src="http://ww3.sinaimg.cn/large/86e2ff85jw1f9a7tek74lj21401z414s.jpg" width=270 height=486/> <img src="http://ww1.sinaimg.cn/mw1024/86e2ff85jw1f9a7z4yqlkj21401z4n8r.jpg" width=270 height=486/>
+
 
 - [线性和网格布局混排](https://github.com/drakeet/MultiType/tree/master/sample/src/main/java/me/drakeet/multitype/sample/grid)
 
