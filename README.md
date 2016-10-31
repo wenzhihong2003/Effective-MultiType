@@ -26,8 +26,8 @@
   - [实现线性布局和网格布局混排列表](#实现线性布局和网格布局混排列表)
   - [数据扁平化处理](#数据扁平化处理)
 - [更多示例](#更多示例)
+  - **仿造微博的数据结构和二级 ViewProvider**
   - drakeet/about-page
-  - 仿造**微博**的数据结构和二级 ViewProvider
   - 线性和网格布局混排
   - drakeet/TimeMachine
   - 类似 Bilibili iOS 端首页
@@ -579,19 +579,30 @@ adapter.notifyDataSetChanged();
 # 更多示例
 
 **MultiType** 的开源项目提供了许多的 sample (示例) 程序，这些示例秉承了一贯的代码清晰、干净的风格，十分易于阅读：
+  
+- [仿造**微博**的数据结构和二级 ViewProvider](https://github.com/drakeet/MultiType/tree/master/sample/src/main/java/me/drakeet/multitype/sample/weibo)
 
+  类似微博数据结构的示例，数据两层结构，Item 也是两层结构：一层框架（包含头像用户名等），一层 content view(微博内容)，内容嵌套于框架中。 微博的每一条微博 Item 都包含了这样两层嵌套关系，这样做的好处是，你不必每个 Item 都去重复制造一遍外层框架。
+  
+  或者换一个比喻，就像聊天消息，一条聊天消息也是两层的，一层头像、用户名、聊天气泡框，一层你的文字、图片等，每一种消息都有左边和右边的样式，分别对应别人发来的消息和你发出的消息。如果左边算一种，右边又算一种，就是比较不好的设计了，会导致布局内容重复、冗余，修改操作都要做两遍。最好的方案是让他们视为同一种，然后在 Item 框那一个层次进行左右边判断和设置。
+  
+  这样两层结构就是我要提供的二级 `ViewProvider` 示例，它能够让你每次新增加一个类型，只要实现内容即可，框可以不用重复实现。
+  
+  如果再不明白，或许你可以看看我的这个示例中微博 Item 框的布局：
+  
+  ![](http://ww1.sinaimg.cn/large/86e2ff85gw1f9br6f2qanj21e0118qil.jpg)
+  
+  从我这个 `frame` 布局可以看出来，它内部有一个 `FrameLayout` 作为 `container` 将用于容纳不同的微博内容，而这一层框架则是共同的。
+  
+  这个例子算高级中的高级，但实际上也是很简单，展示了 **MultiType** 优秀的可拓展能力。完整运行结果展示如下：
+ 
+  <img src="http://ww3.sinaimg.cn/large/86e2ff85jw1f9a7tek74lj21401z414s.jpg" width=270 height=486/> <img src="http://ww1.sinaimg.cn/mw1024/86e2ff85jw1f9a7z4yqlkj21401z4n8r.jpg" width=270 height=486/>
+  
 - [drakeet/about-page](https://github.com/drakeet/about-page)
 
   一个 Material Design 的关于页面，核心基于 MultiType，包含了多种 `Item`s，美观，容易使用。
 
   ![](http://ww2.sinaimg.cn/large/86e2ff85gw1f93gq2tevbj21700pcjyp.jpg)
-  
-- [仿造**微博**的数据结构和二级 ViewProvider](https://github.com/drakeet/MultiType/tree/master/sample/src/main/java/me/drakeet/multitype/sample/weibo)
-
-  类似微博数据结构的示例，数据两层结构，Item 也是两层结构：一层框架（包含头像用户名等），一层 content view(微博内容). 展示了 **MultiType** 优秀的可拓展能力。
-
-  <img src="http://ww3.sinaimg.cn/large/86e2ff85jw1f9a7tek74lj21401z414s.jpg" width=270 height=486/> <img src="http://ww1.sinaimg.cn/mw1024/86e2ff85jw1f9a7z4yqlkj21401z4n8r.jpg" width=270 height=486/>
-
 
 - [线性和网格布局混排](https://github.com/drakeet/MultiType/tree/master/sample/src/main/java/me/drakeet/multitype/sample/grid)
 
