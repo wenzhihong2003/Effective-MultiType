@@ -333,12 +333,12 @@ public class SimpleActivity extends MenuBaseActivity {
 
 [AutoValue](https://github.com/google/auto/tree/master/value) 是 Google 提供的一个在 Java 实体类中自动生成代码的类库，使你更专注于处理项目的其他逻辑，它可使代码更少，更干净，以及更少的 bug. **MultiType** 支持 Google AutoValue，同时支持映射**子类**到同一 View Provider，规则是：如果子类**有**注册，就用注册的映射关系；如果子类**没**注册，则该子类对象使用注册过的父类映射关系。相关源码：
 
-![](http://ww2.sinaimg.cn/large/86e2ff85gw1f93i8wgoubj21ee0nmdnk.jpg)
+... TODO 此处可能更多地介绍一下 auto ...
 
 
 ## 对 class 进行二级分发
 
-我的另外一个项目，便是一开始提到的 **TimeMachine**，它是一个看起来特别像聊天软件的 SDK，但还处于非常初期阶段，大家可以不必太关心它。话说回来，在我的 **TimeMachine** 中，我的消息数据结构是 `Message` - `MessageContent`，简单说就是，我的 `message` 对象们都是一样的 `Message.class`，但 `message` 包含的 `content` 对象不一样，我需要根据 `content` 来分发数据到 `ItemViewProvider`，但我加入 `Items` List 中的数据都是 `Message.class`，因此，如果什么也不做，它们会被视为同一类型。对于这种场景，我们可以继承 `MultiTypeAdapter` 并覆写 `onFlattenClass(@NonNull Item message)` 方法进行二级分发，以我的 `MessageAdapter` 为例：
+我的另外一个项目，便是一开始提到的 **TimeMachine**，它是一个看起来特别像聊天软件的 SDK，但还处于非常初期阶段，大家可以不必太关心它。话说回来，在我的 **TimeMachine** 中，我的消息数据结构是 `Message` - `MessageContent`，`Message` 包含了 `MessageContent`，但有个问题，我的 `message` 对象们都是一样的 `Message.class`，但 `message` 包含的 `content` 对象不一样，我需要根据 `content` 来分发数据到 `ItemViewProvider`，但我加入 `Items` List 中的数据都是 `Message.class`，因此，如果什么也不做，它们会被视为同一类型。对于这种场景，我们可以继承 `MultiTypeAdapter` 并覆写 `onFlattenClass(@NonNull Item message)` 方法进行二级分发，以我的 `MessageAdapter` 为例：
 
 ```java
 public class MessageAdapter extends MultiTypeAdapter {
