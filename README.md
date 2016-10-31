@@ -80,7 +80,9 @@ dependencies {
 
 ## 使用
 
-**Step 1**. 创建一个 `class implements Item`，它将是你的数据类型或 Java bean/model，示例：
+**Step 1**. 创建一个 `class implements Item`，它将是你的数据类型或 Java bean/model. 
+
+ 这是一个类似 Java `Serializable` 接口，只要显式 `implements` 即可，除此之外什么都不用做。它的作用是让 MultiType 把你的所有实体类都视为 `Item` 接口，而且由于它仅是个接口，你仍然可以随意安排你的继承关系。示例如下：
 
 ```java
 public class Category implements Item {
@@ -93,7 +95,9 @@ public class Category implements Item {
 }
 ```
 
-**Step 2**. 创建一个 `class` 继承 `ItemViewProvider`，示例：
+**Step 2**. 创建一个 `class` 继承 `ItemViewProvider`. 
+
+ `ItemViewProvider` 是个抽象类，其中 `onCreateViewHolder` 方法用于生产你的 Item View Holder, `onBindViewHolder` 用于绑定数据到 `View`s. 一般一个 `ItemViewProvider` 类在内存中只会有一个实例对象，MultiType 内部将复用这个 provider 对象来生产相关的所有 Item Views 和绑定数据。示例：
 
 ```java
 public class CategoryViewProvider
@@ -124,7 +128,7 @@ public class CategoryViewProvider
 }
 ```
 
-**Step 3**. 好了，你不必再创建新的类文件了，在 `Activity` 中加入 `RecyclerView` 和 `List` 并注册你的类型即可，示例：
+**Step 3**. 好了，你不必再创建新的类文件了，在 `Activity` 中加入 `RecyclerView` 和 `List` 并注册你的类型就完事了，示例：
 
 ```java
 public class MainActivity extends AppCompatActivity {
@@ -147,7 +151,7 @@ public class MainActivity extends AppCompatActivity {
         adapter.register(Song.class, new SongViewProvider());
 
         /* 模拟加载数据，也可以稍后再加载，然后使用
-           adapter.notifyDataSetChanged() 刷新列表 */
+         * adapter.notifyDataSetChanged() 刷新列表 */
         for (int i = 0; i < 20; i++) {
             items.add(new Category("Songs"));
             items.add(new Song("小艾大人", R.drawable.avatar_dakeet));
