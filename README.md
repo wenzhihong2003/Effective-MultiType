@@ -51,7 +51,7 @@
 
 # 总览
 
-[![](http://ww1.sinaimg.cn/large/86e2ff85gw1f9ber3lsbaj21kw0wzkci.jpg)](http://ww1.sinaimg.cn/large/86e2ff85gw1f9ber3lsbaj21kw0wzkci.jpg)
+[![](http://ww4.sinaimg.cn/large/86e2ff85gw1f9bf092eraj21kw0xr1el.jpg)](http://ww2.sinaimg.cn/large/86e2ff85gw1f9bekb34xfj21kw0y3av4.jpg)
 
 # MultiType 基础用法
 
