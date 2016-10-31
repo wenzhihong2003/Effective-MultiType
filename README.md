@@ -97,7 +97,7 @@ public class Category implements Item {
 
 **Step 2**. 创建一个 `class` 继承 `ItemViewProvider`. 
 
- `ItemViewProvider` 是个抽象类，其中 `onCreateViewHolder` 方法用于生产你的 Item View Holder, `onBindViewHolder` 用于绑定数据到 `View`s. 一般一个 `ItemViewProvider` 类在内存中只会有一个实例对象，MultiType 内部将复用这个 provider 对象来生产相关的所有 Item Views 和绑定数据。示例：
+ `ItemViewProvider` 是个抽象类，其中 `onCreateViewHolder` 方法用于生产你的 Item View Holder, `onBindViewHolder` 用于绑定数据到 `View`s. 一般一个 `ItemViewProvider` 类在内存中只会有一个实例对象，MultiType 内部将复用这个 provider 对象来生产所有相关的 Item Views 和绑定数据。示例：
 
 ```java
 public class CategoryViewProvider
