@@ -338,7 +338,7 @@ public class SimpleActivity extends MenuBaseActivity {
 
 ## 对 class 进行二级分发
 
-在我的 **TimeMachine** 中，我的消息数据结构是 `Message` - `MessageContent`，简单说就是，我的 `message` 对象们都是一样的 `Message.class`，但 `message` 包含的 `content` 对象不一样，我需要根据 `content` 来分发数据到 `ItemViewProvider`，但我加入 `Items` List 中的数据都是 `Message.class`，因此，如果什么也不做，它们会被视为同一类型。对于这种场景，我们可以继承 `MultiTypeAdapter` 并覆写 `onFlattenClass(@NonNull Item message)` 方法进行二级分发，以我的 `MessageAdapter` 为例：
+我的另外一个项目，便是一开始提到的 **TimeMachine**，它是一个看起来特别像聊天软件的 SDK，但还处于非常初期阶段，大家可以不必太关心它。话说回来，在我的 **TimeMachine** 中，我的消息数据结构是 `Message` - `MessageContent`，简单说就是，我的 `message` 对象们都是一样的 `Message.class`，但 `message` 包含的 `content` 对象不一样，我需要根据 `content` 来分发数据到 `ItemViewProvider`，但我加入 `Items` List 中的数据都是 `Message.class`，因此，如果什么也不做，它们会被视为同一类型。对于这种场景，我们可以继承 `MultiTypeAdapter` 并覆写 `onFlattenClass(@NonNull Item message)` 方法进行二级分发，以我的 `MessageAdapter` 为例：
 
 ```java
 public class MessageAdapter extends MultiTypeAdapter {
