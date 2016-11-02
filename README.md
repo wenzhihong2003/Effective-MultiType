@@ -185,11 +185,11 @@ public class MainActivity extends AppCompatActivity {
 
 # 高级用法
 
-介绍了基础用法和设计思想后，我们可以来介绍一下 MultiType 的高级用法。这是一些典型需求和案例，也许一开始并不会使用到，但如若了解，能够拓宽使用 MultiType 的思路，并且其中也分享了许多有意思的内容和考虑问题的角度。
+介绍了基础用法和设计思想后，我们可以来介绍一下 MultiType 的高级用法。这是一些典型需求和案例，它们是基础用法的延伸，也是设计思想的体现。也许一开始并不会使用到，但如若了解，能够拓宽使用 MultiType 的思路，并且其中也分享了许多有意思的内容和考虑问题的角度。
 
 ## 使用 MultiTypeTemplates 插件自动生成代码
 
-之前我们介绍了通过 3 个步骤完成 **MultiType** 的初次接入使用，实际上这个过程可以更加简化，**MultiType** 提供了 Android Studio 插件来自动生成代码：**MultiTypeTemplates**，源码也是开源的，[https://github.com/drakeet/MultiTypeTemplates](https://github.com/drakeet/MultiTypeTemplates)，不仅提供了一键生成 `Item` 和 `ItemViewProvider`，而且**是一个很好的利用代码模版自动生成代码的示例。**其中使用到了官方提供的代码模版 API，也用到了我自己发明的更灵活修改模版内容的方法，有兴趣做这方面插件的可以看看。
+在基础用法中，我们了通过 3 个步骤完成 **MultiType** 的初次接入使用，实际上这个过程可以更加简化，**MultiType** 提供了 Android Studio 插件来自动生成代码：**MultiTypeTemplates**，源码也是开源的，[https://github.com/drakeet/MultiTypeTemplates](https://github.com/drakeet/MultiTypeTemplates)，不仅提供了一键生成 `Item` 和 `ItemViewProvider`，而且**是一个很好的利用代码模版自动生成代码的示例。**其中使用到了官方提供的代码模版 API，也用到了我自己发明的更灵活修改模版内容的方法，有兴趣做这方面插件的可以看看。
 
 话说回来，安装和使用 **MultiTypeTemplates** 非常简单：
 
