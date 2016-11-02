@@ -180,10 +180,12 @@ public class MainActivity extends AppCompatActivity {
 
 - 要直观，使用起来能令项目代码更清晰、模块化
 
-  **MultiType** 提供的 `ItemViewProvider` 沿袭了 `RecyclerView Adapter` 的接口命名，使用起来更加舒适，符合习惯。另外，手动写一个新的 `ItemViewProvider` 需要提供了 类型 泛型，虽然略微有点儿麻烦，但能带来一些好处，指定泛型之后，我们不再需要自己做强制转型，而且代码能够显式表明 `ItemViewProvider` 和 `Item class` 的对应关系，遵循了简单可依赖的原则。另外，现在我们有 **MultiTypeTemplates** 插件来自动生成代码，这个过程变得更加顺滑简单。
+  **MultiType** 提供的 `ItemViewProvider` 沿袭了 `RecyclerView Adapter` 的接口命名，使用起来更加舒适，符合习惯。另外，手动写一个新的 `ItemViewProvider` 需要提供了 类型 泛型，虽然略微有点儿麻烦，但能带来一些好处，指定泛型之后，我们不再需要自己做强制转型，而且代码能够显式表明 `ItemViewProvider` 和 `Item class` 的对应关系，简单直观。另外，现在我们有 **MultiTypeTemplates** 插件来自动生成代码，这个过程变得更加顺滑简单。
 
 
 # 高级用法
+
+介绍了基础用法和设计思想后，我们可以来介绍一下 MultiType 的高级用法。这是一些典型需求和案例，也许一开始并不会使用到，但如若了解，能够拓宽使用 MultiType 的思路，并且其中也分享了许多有意思的内容和考虑问题的角度。
 
 ## 使用 MultiTypeTemplates 插件自动生成代码
 
