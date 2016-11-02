@@ -187,7 +187,7 @@ public class MainActivity extends AppCompatActivity {
 
 ## 使用 MultiTypeTemplates 插件自动生成代码
 
-上面我们介绍了通过 3 个步骤完成 **MultiType** 的初次接入使用，实际上这个过程可以更加简化，**MultiType** 提供了 Android Studio 插件来自动生成代码：**MultiTypeTemplates**，源码也是开源的，[https://github.com/drakeet/MultiTypeTemplates](https://github.com/drakeet/MultiTypeTemplates)，不仅提供了一键生成 `Item` 和 `ItemViewProvider`，而且**是一个很好的利用代码模版自动生成代码的示例。**其中使用到了官方提供的代码模版 API，也用到了我自己发明的更灵活修改模版内容的方法，有兴趣做这方面插件的可以看看。
+之前我们介绍了通过 3 个步骤完成 **MultiType** 的初次接入使用，实际上这个过程可以更加简化，**MultiType** 提供了 Android Studio 插件来自动生成代码：**MultiTypeTemplates**，源码也是开源的，[https://github.com/drakeet/MultiTypeTemplates](https://github.com/drakeet/MultiTypeTemplates)，不仅提供了一键生成 `Item` 和 `ItemViewProvider`，而且**是一个很好的利用代码模版自动生成代码的示例。**其中使用到了官方提供的代码模版 API，也用到了我自己发明的更灵活修改模版内容的方法，有兴趣做这方面插件的可以看看。
 
 话说回来，安装和使用 **MultiTypeTemplates** 非常简单：
 
