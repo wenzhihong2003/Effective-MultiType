@@ -335,14 +335,17 @@ public class SimpleActivity extends MenuBaseActivity {
 
 ## 支持 Google AutoValue
 
-[AutoValue](https://github.com/google/auto/tree/master/value) 是 Google 提供的一个在 Java 实体类中自动生成代码的类库，使你更专注于处理项目的其他逻辑，它可使代码更少，更干净，以及更少的 bug. **MultiType** 支持 Google AutoValue，同时支持映射**子类**到同一 View Provider，规则是：如果子类**有**注册，就用注册的映射关系；如果子类**没**注册，则该子类对象使用注册过的父类映射关系。相关源码：
+[AutoValue](https://github.com/google/auto/tree/master/value) 是 Google 提供的一个在 Java 实体类中自动生成代码的类库，使你更专注于处理项目的其他逻辑，它可使代码更少，更干净，以及更少的 bug. 
 
-... TODO 此处可能更多地介绍一下 auto ...
+当我们使用传统方式创建一个 Java 模型类的时候，经常需要写一堆 `toString()`、`hashCode()`、getter、setter 等等方法，而且对于 Android 开发，大多情况下需要实现 `Parcelable` 接口。这样的结果是，我本来想要一个只有几个属性的小模型类，但出于各种原因，这个模型类方法数变得十分繁复，阅读起来很不清爽，并且难免会写错内容。AutoValue 的出现解决了这个问题，我们只需定义一些抽象类交给 AutoValue，AutoValue 会**自动**生成该抽象类的具体实现子类，并携带各种样板代码。
 
+更详细的介绍内容和使用教程，我会在文章末尾会给出 AutoValue 的相关链接，不熟悉 AutoValue 可以借此机会看一下，在这里就不做过多介绍了。新手暂时看不懂也不必纠结，了解之后都是十分容易的。
+
+**MultiType** 支持了 Google AutoValue，支持自动映射某个已经注册的类型的**子类**到同一 View Provider，规则是：如果子类**有**注册，就用注册的映射关系；如果子类**没**注册，则该子类对象使用注册过的父类映射关系。
 
 ## 对 class 进行二级分发
 
-我的另外一个项目，便是一开始提到的 **TimeMachine**，它是一个看起来特别像聊天软件的 SDK，但还处于非常初期阶段，大家可以不必太关心它。话说回来，在我的 **TimeMachine** 中，我的消息数据结构是 `Message` - `MessageContent`，`Message` 包含了 `MessageContent`，但有个问题，我的 `message` 对象们都是一样的 `Message.class`，但 `message` 包含的 `content` 对象不一样，我需要根据 `content` 来分发数据到 `ItemViewProvider`，但我加入 `Items` List 中的数据都是 `Message.class`，因此，如果什么也不做，它们会被视为同一类型。对于这种场景，我们可以继承 `MultiTypeAdapter` 并覆写 `onFlattenClass(@NonNull Item message)` 方法进行二级分发，以我的 `MessageAdapter` 为例：
+我的另外一个项目，即一开始提到的 **TimeMachine**，它是一个看起来特别像聊天软件的 SDK，但还处于非常初期阶段，大家可以不必太关心它。话说回来，在我的 **TimeMachine** 中，我的消息数据结构是 `Message` - `MessageContent`，`Message` 包含了 `MessageContent`. 因此产生了一个问题，我的 `message` 对象们都是一样的 `Message` 类型，但 `message` 包含的 `content` 对象不一样，我需要根据 `content` 来分发数据到 `ItemViewProvider`，但我加入 `Items` 中的数据都是 `Message` 对象，因此，如果什么也不做，它们会被视为同一类型。对于这种场景，我们可以继承 `MultiTypeAdapter` 并覆写 `onFlattenClass(@NonNull Item message)` 方法进行二级分发，以我的 `MessageAdapter` 为例：
 
 ```java
 public class MessageAdapter extends MultiTypeAdapter {
@@ -358,8 +361,24 @@ public class MessageAdapter extends MultiTypeAdapter {
 }
 ```
 
-是不是十分简单？这样以后，我就可以直接将 `MessageContent.class` 注册进类型池，而将包含不同 `content` 的 `Message` 对象 add 进 `Items` List，`MessageAdapter` 会自动取出 `message` 的 `content` 对象，并以它为基准定位 `ItemViewProvider`.
+是不是十分简单？这样以后，我就可以直接将 `MessageContent.class` 注册进类型池，而将包含不同 `content` 的 `Message` 对象 add 进 `Items` List，`MessageAdapter` 会自动取出 `message` 的 `content` 对象，并以它为基准定位 `ItemViewProvider` 同时会把整个 `Message `对象发给 `provider`，`provider` 可进行分层，如下：
 
+```java
+public abstract class MessageViewProvider<C extends Content, V extends RecyclerView.ViewHolder>
+    extends ItemViewProvider<Message, V> {
+
+    @SuppressWarnings("unchecked") @Override
+    protected void onBindViewHolder(@NonNull V holder, @NonNull Message message) {
+        onBindViewHolder(holder, (C) message.content, message);
+    }
+
+    /* 留给子类的抽象方法 */
+    protected abstract void onBindViewHolder(
+        @NonNull V holder, @NonNull C content, @NonNull Message message);
+}
+```
+
+总的来说，对 class 进行二级分发往往要伴随着对 `ItemViewProvider` 进行二级处理，对此我给出了一个详细的示例，到本文到 "示例" 章节中我们会再详细介绍 `ItemViewProvider` 二级分发的场景和更具体运用。
 
 ## MultiType 与下拉刷新、加载更多、HeaderView、FooterView、Diff
 
@@ -367,7 +386,7 @@ public class MessageAdapter extends MultiTypeAdapter {
 
 对于很多人关心的 下拉刷新、加载更多、HeaderView、FooterView、Diff 这些功能特性，其实都不应该是 **MultiType** 的范畴，**MultiType** 的分内之事是做类型、事件与 View 的分发、连接工作，其余无关的需求，都是可以在 **MultiType** 外部完成，或者通过继承 进行自行封装和拓展，而作为一个基础、公共类库，我想它是不应该包含这些内容。
 
-但很多新手可能并不习惯一码归一码，不习惯代码模块化，因此在此我有必要对这几个点简单示范下如何在 **MultiType** 之外去实现：
+但很多新手可能并不习惯代码分工、模块化，因此在此我有必要对这几个点简单示范下如何在 **MultiType** 之外去实现：
 
 - **下拉刷新：**
 
@@ -519,7 +538,7 @@ public class MultiGridActivity extends MenuBaseActivity {
 
 ## 数据扁平化处理
 
-在一个**垂直** `RecyclerView` 中，`Item` 们都是同级的，没有任何嵌套关系，但我们的数据结构往往存在嵌套关系，比如 `Post` 内部包含了 `Comment`s 数据，也就是 `Post` 嵌套了 `Comment`，就像微信朋友圈一样，"动态" 伴随着 "评论"。那么如何把 非扁平化 的数据排布在 扁平 的列表中呢？必然需要一个_数据扁平化处理_的过程，就像 `ListView` 的数据需要一个 `Adapter` 来适配，`Adapter` 就像一个油漏斗，把油引入瓶子中。我们在面对嵌套数据结构的时候，可以采用如下的扁平化处理，关于扁平化这个词，不必太纠结，简单说，就是把嵌套数据都拉出来，摊平，让 `Comment` 和 `Post` 同级，最后把它们都 add 进一个 `Items` 容器，交给 `MultiTypeAdapter`：
+在一个**垂直** `RecyclerView` 中，`Item` 们都是同级的，没有任何嵌套关系，但我们的数据结构往往存在嵌套关系，比如 `Post` 内部包含了 `Comment`s 数据，或换句话说 `Post` 嵌套了 `Comment`，就像微信朋友圈一样，"动态" 伴随着 "评论"。那么如何把 非扁平化 的数据排布在 扁平 的列表中呢？必然需要一个_数据扁平化处理_的过程，就像 `ListView` 的数据需要一个 `Adapter` 来适配，`Adapter` 就像一个油漏斗，把油引入瓶子中。我们在面对嵌套数据结构的时候，可以采用如下的扁平化处理，关于扁平化这个词，不必太纠结，简单说，就是把嵌套数据都拉出来，摊平，让 `Comment` 和 `Post` 同级，最后把它们都 add 进同一个 `Items` 容器，交给 `MultiTypeAdapter`. 示例：
 
 假设：你的 `Post` 是这样的：
 
@@ -586,7 +605,7 @@ adapter.notifyDataSetChanged();
   
 - [仿造**微博**的数据结构和二级 ViewProvider](https://github.com/drakeet/MultiType/tree/master/sample/src/main/java/me/drakeet/multitype/sample/weibo)
 
-  类似微博数据结构的示例，数据两层结构，Item 也是两层结构：一层框架（包含头像用户名等），一层 content view(微博内容)，内容嵌套于框架中。 微博的每一条微博 Item 都包含了这样两层嵌套关系，这样做的好处是，你不必每个 Item 都去重复制造一遍外层框架。
+  这是一个类似微博数据结构的示例，数据两层结构，Item 也是两层结构：一层框架（包含头像用户名等），一层 content view(微博内容)，内容嵌套于框架中。微博的每一条微博 Item 都包含了这样两层嵌套关系，这样做的好处是，你不必每个 Item 都去重复制造一遍外层框架。
   
   或者换一个比喻，就像聊天消息，一条聊天消息也是两层的，一层头像、用户名、聊天气泡框，一层你的文字、图片等。另外，每一种消息都有左边和右边的样式，分别对应别人发来的消息和你发出的消息。如果左边算一种，右边又算一种，就是比较不好的设计了，会导致布局内容重复、冗余，修改操作都要做两遍。最好的方案是让他们视被为同一种类型，然后在 Item 框层次进行左右边判断和框架相关数据绑定。
   
@@ -601,6 +620,8 @@ adapter.notifyDataSetChanged();
   这个例子算高级中的高级，但实际上也是很简单，展示了 **MultiType** 优秀的可拓展能力。完整运行结果展示如下：
  
   <img src="http://ww3.sinaimg.cn/large/86e2ff85jw1f9a7tek74lj21401z414s.jpg" width=270 height=486/> <img src="http://ww1.sinaimg.cn/mw1024/86e2ff85jw1f9a7z4yqlkj21401z4n8r.jpg" width=270 height=486/>
+  
+  > 注：在示例中我们并没有示范服务端 JSON 数据转为我们定义的 Weibo 对象过程，实际上对于完整链路，这个过程是需要做数据转换，我们需要在 `Weibo` 层加一个 `type` 或 `describe` 字段用于描述微博内容类型，然后再将微博内容的 JSON 文本转为具体微博内容对象交给 Weibo. 
   
 - [drakeet/about-page](https://github.com/drakeet/about-page)
 
@@ -677,4 +698,5 @@ adapter.notifyDataSetChanged();
 
 - 《Android 内存泄漏案例和解析》https://drakeet.me/android-leaks
 - 《Android 复杂的多类型列表视图新写法：MultiType》https://drakeet.me/multitype
+- 《使用 Google AutoValue 自动生成代码》http://tedyin.me/2016/04/11/auto-value/
 - **MultiType** 源代码 https://github.com/drakeet/MultiType
