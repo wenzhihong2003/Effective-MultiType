@@ -190,7 +190,7 @@ public class MainActivity extends AppCompatActivity {
 
 在基础用法中，我们并没有提到 全局类型池，实际上，**MultiType** 支持 局部类型池 和 全局类型池，并支持二者共用，当出现冲突时，以局部的为准。使用局部类型池就如上面的示例，调用 `adapter.register()` 即可。而使用全局类型池也是很容易的，**MultiType** 提供了一个内置的 `GlobalMultiTypePool` 作为全局类型池来存储类型和 view 关系，使用如下：
 
-只要在使用你的全局类型之前任意位置注册类型，通过调用 `GlobalMultiTypePool.register()` 静态方法完成注册。推荐统一在 `Application` 初始便进行注册，这样代码便于寻找和阅读。
+只要在使用你的全局类型之前任意位置注册类型，通过调用 `GlobalMultiTypePool.register(...)` 静态方法完成注册。推荐统一在 `Application` 初始便进行注册，这样代码便于寻找和阅读。
 
 之后回到你的 `Activity`，调用 `adapter.applyGlobalMultiTypePool()` 方法应用你注册过的全局类型即可。
 
@@ -228,12 +228,14 @@ public class LeakActivity extends Activity {
 
 由于 Java 匿名内部类 或 非静态内部类，都会默认持有 外部类 的引用，比如这里的 `OnClickListener` 匿名类对象会持有 `LeakActivity.this`，当 `listener` 传递给 `new PostViewProvider()` 构造函数的时候，`GlobalMultiTypePool` 内置的静态类型池将长久持有 `provider -> listener -> LeakActivity.this` 引用链，若没有及时释放，就会引起内存泄露。
 
-因此，**在使用全局类型池时，最好不要给 `provider` 传递回调对象或者外部引用，否则就应手动释放或使用弱引用(`WeakReference`)。**除此之外，全局类型池没有什么其他问题，类型池都只会持有 `class` 和非常轻薄的 `provider` 对象。我做过一个试验，就算拥有上万个类型和 `provider`，内存占用也是很少的，而且索引速度很快，在主线程连续注册一万个类型花费不过 10 毫秒的时间，何况一般一个应用根本不可能有这么多类型，完全不必担心这方面的问题。
+因此，**在使用全局类型池时，最好不要给 `provider` 传递回调对象或者外部引用，否则就应手动释放或使用弱引用(`WeakReference`)。**除此之外，全局类型池没有什么其他问题，类型池都只会持有 `class` 和非常轻薄的 `provider` 对象。我做过一个试验，就算拥有上万个类型和 `provider`，内存占用也是很少的，索引速度也很快，在主线程连续注册一万个类型花费不过 10 毫秒的时间，何况一般一个应用根本不可能有这么多类型，完全不必担心这方面的问题。
 
 另外一个特性是，不管是全局类型池还是局部类型池，都支持重复注册类型。当发现重复时，之后注册的会把之前注册的类型覆盖掉，因此对于全局类型池，需要谨慎进行重复注册，以免影响到其他地方。
 
 
 ## 一个类型对应多个 `ViewProvider`
+
+> 注：本文所有的 `ViewProvider` 都指的是 `ItemViewProvider`.
 
 **MultiType** 天然支持一个类型对应多个 `ViewProvider`，但仅限于在不同的列表中。比如你在 `adapter1` 中注册了 `Post.class` 对应 `SinglePostViewProvider`，在另一个 `adapter2` 中注册了 `Post.class` 对应 `PostDetailViewProvider`，这便是一对多的场景。只要是在不同的局部类型池中，无论如何都不会相互干扰，都是允许的。
 
@@ -254,7 +256,7 @@ OnClickListener listener = new OnClickListener() {
 adapter.register(Post.class, new PostViewProvider(xxx, listener));
 ```
 
-但话说回来，对于点击事件，能不依赖 `provider` 外部内容的话，最好就在 `provider` 内部完成。`provider` 内部能够接收到 Views 和 数据，大部分情况下，完全有能力不依赖外部 独立完成逻辑。这样能使代码更加模块化，便于解耦，例如：
+但话说回来，对于点击事件，能不依赖 `provider` 外部内容的话，最好就在 `provider` 内部完成。`provider` 内部能够接收到 Views 和 数据，大部分情况下，完全有能力不依赖外部 独立完成逻辑。这样能使代码更加模块化，便于解耦，例如下面便是一个完全自包含的例子：
 
 ```java
 public class SquareViewProvider extends ItemViewProvider<Square, SquareViewProvider.ViewHolder> {
@@ -326,7 +328,9 @@ public class SimpleActivity extends MenuBaseActivity {
 }
 ```
 
-这样做以后，`MultiTypeAdapter` 相关的异常都会报到你的 `Activity`，并且会详细注明出错的原因，而如果符合断言，断言代码不会有任何副作用或影响你的代码逻辑，它相当于废话。关于这个类的源代码也是很简单，有兴趣可以直接看看源码：[drakeet/multitype/MultiTypeAsserts.java](https://github.com/drakeet/MultiType/blob/master/library/src/main/java/me/drakeet/multitype/MultiTypeAsserts.java)
+`assertAllRegistered` 和 `assertHasTheSameAdapter` 都是可选择性使用，`assertAllRegistered` 需要在加载或更新数据之后， `assertHasTheSameAdapter` 必须在 `recyclerView.setAdapter(adapter)` 之后。
+
+这样做以后，`MultiTypeAdapter` 相关的异常都会报到你的 `Activity`，并且会详细注明出错的原因，而如果符合断言，断言代码不会有任何副作用或影响你的代码逻辑，这时你可以把它当作废话。关于这个类的源代码也是很简单，有兴趣可以直接看看源码：[drakeet/multitype/MultiTypeAsserts.java](https://github.com/drakeet/MultiType/blob/master/library/src/main/java/me/drakeet/multitype/MultiTypeAsserts.java)
 
 
 ## 支持 Google AutoValue
