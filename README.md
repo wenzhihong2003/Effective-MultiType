@@ -700,4 +700,5 @@ adapter.notifyDataSetChanged();
 - 《Android 内存泄漏案例和解析》https://drakeet.me/android-leaks
 - 《Android 复杂的多类型列表视图新写法：MultiType》https://drakeet.me/multitype
 - 《使用 Google AutoValue 自动生成代码》http://tedyin.me/2016/04/11/auto-value/
+- 我的个人博客 http://drakeet.me
 - **MultiType** 源代码 https://github.com/drakeet/MultiType
