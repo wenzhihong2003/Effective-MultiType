@@ -686,7 +686,7 @@ adapter.notifyDataSetChanged();
 
   A: 在前面 "设计思想" 中我们谈到：_MultiType 或许不是使用起来最简单的，但很可能是使用起来最灵活的。_其中的缘由是它高度可定制、可拓展，而不是把一些路封死。作为一个基础类库，简单和灵活需要一个均衡点，过度精简便要以失去灵活性为代价。如果觉得 **MultiType** 不够精简，想将它修改得更加容易使用，我推荐的方式是去继承 `MultiTypeAdapter` 或 `ItemViewProvider`，甚至你可以重新实现一个 `TypePool` 再设置给 `MultiTypeAdapter`. 我们不应该直接到底层去修改、破坏它们。总之，利用开放接口或继承的做法不管对于 **MultiType** 还是其它开源库，都应该是定制的首选。
   
-Q: 在 `ItemViewProvider` 中如何拿到 `Context` 对象？
+- **Q: 在 `ItemViewProvider` 中如何拿到 `Context` 对象？**
 
   A: 有人问我说，他在 `ItemViewProvider` 里使用 [Glide](https://github.com/bumptech/glide) 来加载图片需要获取到 Activity `Context` 对象，要怎么才能拿到 `Context` 对象？这是一个特别简单的问题，但我想既然有人问，应该比较典型，我就详细解答下：首先，在 Android 开发中，任何 `View` 对象都能通过 `view.getContext()` 拿到 `Context` 对象，这些对象本质上都是 `Activity` 对象的引用。而在我们的 `ItemViewProvider` 中，可以通过 `holder.itemView.getContext()` 获取到 `Context` 对象，也可以通过 holder.xxxView 即任意的 `View` 对象 `getContext()` 方法拿到 `Context`，`Context` 中文释义是 _"上下文对象"_，一般情况下，都是由 `Activity` 传递给 `View`s，`View`s 内部再进行传递。比如我们使用 `RecyclerView`，`Activity` 会将它的 `Context` 传递给 `RecyclerView`，`RecyclerView` 再传递给 `Adapter`，`Adapter` 再传递给 `ViewHolder` 的 `itemView`，`itemView` 再传递给它的各个子 `View`s，传递来传递去，其实都是同一个对象的引用。总而言之，拿到 `Context` 对象非常简单，只要你能拿到一个 `View` 对象，调用 `view.getContext()` 即可。
   
