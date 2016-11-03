@@ -690,9 +690,7 @@ adapter.notifyDataSetChanged();
 
   A: 有人问我说，他在 `ItemViewProvider` 里使用 [Glide](https://github.com/bumptech/glide) 来加载图片需要获取到 Activity `Context` 对象，要怎么才能拿到 `Context` 对象？这是一个特别简单的问题，但我想既然有人问，应该比较典型，我就详细解答下：首先，在 Android 开发中，任何 `View` 对象都能通过 `view.getContext()` 拿到 `Context` 对象，这些对象本质上都是 `Activity` 对象的引用。而在我们的 `ItemViewProvider` 中，可以通过 `holder.itemView.getContext()` 获取到 `Context` 对象，也可以通过 viewHolder 的任意 `View` 对象 `getContext()` 方法拿到 `Context` 对象. `Context` 中文释义是 _"上下文对象"_，一般情况下，都是由 `Activity` 传递给 `View`s，`View`s 内部再进行传递。比如我们使用 `RecyclerView`，`Activity` 会将它的 `Context` 传递给 `RecyclerView`，`RecyclerView` 再传递给 `Adapter`，`Adapter` 再传递给 `ViewHolder` 的 `itemView`，`itemView` 再传递给它的各个子 `View`s，传递来传递去，其实都是同一个对象的引用。
   
-  总而言之，拿到 `Context` 对象非常简单，只要你能拿到一个 `View` 对象，调用 `view.getContext()` 即可。
-  
-  另外，也可以参考 _[与 provider 通讯](#与-viewprovider-通讯)_ 章节，我们可以很方便地给 `provider` 传递任何对象进去，包括 `Context` 对象。
+  总而言之，拿到 `Context` 对象非常简单，只要你能拿到一个 `View` 对象，调用 `view.getContext()` 即可。另外，也可以参考 _[与 provider 通讯](#与-viewprovider-通讯)_ 章节，我们可以很方便地给 `provider` 传递任何对象进去，包括 `Context` 对象。
   
 # 感谢
 
