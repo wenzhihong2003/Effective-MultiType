@@ -692,7 +692,7 @@ adapter.notifyDataSetChanged();
   
   总而言之，拿到 `Context` 对象非常简单，只要你能拿到一个 `View` 对象，调用 `view.getContext()` 即可。
   
-  另外，也可以参考 [与 provider 通讯](#与-viewprovider-通讯) 章节，我们可以很方便地给 `provider` 传递任何对象进去，包括 `Context` 对象。
+  另外，也可以参考 _[与 provider 通讯](#与-viewprovider-通讯)_ 章节，我们可以很方便地给 `provider` 传递任何对象进去，包括 `Context` 对象。
   
 # 感谢
 
