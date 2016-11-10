@@ -50,11 +50,13 @@
 - 高效，没有性能损失，内存友好，最大限度发挥 `RecyclerView` 的复用性
 - 可读，代码清晰干净、设计精巧，极力避免复杂化，可读性很好，为拓展和自行解决问题提供了基础
 
-它能轻松实现如下页面，全都基于 MultiType: 
+# 总览
+
+MultiType 能轻松实现如下页面，它们将在示例篇章具体提供: 
 
 ![](http://ww4.sinaimg.cn/large/86e2ff85gw1f9mqd8lwzkj21hc0f8n4k.jpg)
 
-# 总览
+MultiType 源码关系：
 
 [![](http://ww4.sinaimg.cn/large/86e2ff85gw1f9bf092eraj21kw0xr1el.jpg)](http://ww2.sinaimg.cn/large/86e2ff85gw1f9bekb34xfj21kw0y3av4.jpg)
 
