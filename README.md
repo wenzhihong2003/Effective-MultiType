@@ -56,7 +56,7 @@ MultiType 能轻松实现如下页面，它们将在示例篇章具体提供:
 
 ![](http://ww4.sinaimg.cn/large/86e2ff85gw1f9mqd8lwzkj21hc0f8n4k.jpg)
 
-MultiType 源码关系：
+MultiType 的源码关系：
 
 [![](http://ww4.sinaimg.cn/large/86e2ff85gw1f9bf092eraj21kw0xr1el.jpg)](http://ww2.sinaimg.cn/large/86e2ff85gw1f9bekb34xfj21kw0y3av4.jpg)
 
