@@ -50,6 +50,10 @@
 - 高效，没有性能损失，内存友好，最大限度发挥 `RecyclerView` 的复用性
 - 可读，代码清晰干净、设计精巧，极力避免复杂化，可读性很好，为拓展和自行解决问题提供了基础
 
+它能轻松实现如下页面，全都基于 MultiType: 
+
+![](http://ww4.sinaimg.cn/large/86e2ff85gw1f9mqd8lwzkj21hc0f8n4k.jpg)
+
 # 总览
 
 [![](http://ww4.sinaimg.cn/large/86e2ff85gw1f9bf092eraj21kw0xr1el.jpg)](http://ww2.sinaimg.cn/large/86e2ff85gw1f9bekb34xfj21kw0y3av4.jpg)
@@ -640,7 +644,7 @@ adapter.notifyDataSetChanged();
  
   <img src="http://ww3.sinaimg.cn/large/86e2ff85jw1f9a7tek74lj21401z414s.jpg" width=270 height=486/> <img src="http://ww1.sinaimg.cn/mw1024/86e2ff85jw1f9a7z4yqlkj21401z4n8r.jpg" width=270 height=486/>
   
-  > 注：在示例中我们并没有示范服务端 JSON 数据转为我们定义的 Weibo 对象过程，实际上对于完整链路，这个过程是需要做数据转换，我们需要在 `Weibo` 层加一个 `type` 或 `describe` 字段用于描述微博内容类型，然后再将微博内容的 JSON 文本转为具体微博内容对象交给 Weibo. 
+  > 注：在示例中我们并没有示范服务端 JSON 数据转为我们定义的 Weibo 对象过程（很快会补足），实际上对于完整链路，这个过程是需要做数据转换，我们需要在 `Weibo` 层加一个 `type` 或 `describe` 字段用于描述微博内容类型，然后再将微博内容的 JSON 文本转为具体微博内容对象交给 Weibo. 
   
 - [drakeet/about-page](https://github.com/drakeet/about-page)
 
